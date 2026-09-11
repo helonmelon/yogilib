@@ -143,7 +143,7 @@ Each tab has independent input/output textareas, Convert, Insert into Editor, an
 | File | Contents |
 |------|----------|
 | `01-getting-started.md` | Requirements, running the server, project layout, adding new pages |
-| `02-architecture.md` | Request lifecycle, core types, routing table, template system, mock data layer |
+| `02-architecture.md` | Request lifecycle, core types, routing table, template system, data layer |
 | `03-design-system.md` | Typography, colour palette, layout, all UI components, Quill toolbar |
 | `04-backend-integration.md` | Full database schema, handler TODO map, file upload flow, auth, search |
 | `05-language-support.md` | Unicode, Nepali typing, Preeti encoding, ITRANS, IAST, Sanskrit specifics |

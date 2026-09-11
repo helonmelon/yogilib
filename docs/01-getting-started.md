@@ -3,7 +3,8 @@
 ## Requirements
 
 - **Go 1.22+** — uses pattern matching in `http.NewServeMux` (introduced in Go 1.22)
-- No Node.js, no Python, no external Go dependencies
+- No Node.js or Python runtime is required
+- Go dependencies are managed through `go.mod`
 - Internet access for CDN assets (Google Fonts, Quill.js) — can be self-hosted for offline use
 
 ## Running Locally
@@ -20,15 +21,20 @@ go build -o yogilib .
 
 # Custom port
 PORT=9000 ./yogilib
+
+# Optional: use a custom SQLite database path
+DB_PATH=/data/yogilib.db ./yogilib
 ```
 
 The server starts at **http://localhost:8080**.
+
+On Windows PowerShell, use `$env:PORT="9000"` and `$env:DB_PATH="C:\path\to\yogilib.db"` before running the binary.
 
 ## Project Layout
 
 ```
 yogilib-web/
-├── main.go                  # routes, handlers, mock data, PageData struct
+├── main.go                  # routes, handlers, SQLite setup, auth, PageData struct
 ├── go.mod
 ├── docs/                    # ← this documentation folder
 │   ├── 01-getting-started.md
@@ -48,7 +54,7 @@ yogilib-web/
 │   ├── similar.html         # similar sites / resources
 │   ├── document.html        # document viewer (PDF embed / download)
 │   ├── edit.html            # edit document metadata (admin)
-│   ├── upload.html          # contribute a new document (public)
+│   ├── upload.html          # contribute a new document (uploader/admin)
 │   ├── store.html           # book store / shop
 │   ├── login.html           # admin login
 │   └── dashboard.html       # admin document management grid
@@ -75,7 +81,7 @@ yogilib-web/
 2. Add a handler in `main.go`:
    ```go
    func myPageHandler(w http.ResponseWriter, r *http.Request) {
-       render(w, "mypage", PageData{Title: "My Page"})
+       render(w, r, "mypage", PageData{Title: "My Page"})
    }
    ```
 3. Register the route:

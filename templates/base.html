@@ -11,8 +11,7 @@
 </head>
 <body>
 
-  {{/* Admin bar — shown only when user is logged in.
-       TODO: pass .User from session/auth middleware and render conditionally. */}}
+  {{/* Admin bar — shown only when user is logged in. */}}
   {{if .User}}
   <div class="admin-bar">
     <span>{{.User.Email}}</span>

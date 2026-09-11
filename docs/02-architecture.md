@@ -5,19 +5,20 @@
 Yogilib is a **pure Go stdlib web server** — no frameworks, no build pipeline, no JavaScript bundler. Every page is server-rendered via Go's `html/template`. Static assets (CSS, fonts, images, JS helpers) are served directly from the `static/` directory.
 
 ```
-Browser → net/http Mux → Handler → html/template → HTML response
-                                      ↑
-                                 (mock data / future: DB)
+Browser → net/http Mux → Auth Middleware → Handler → html/template → HTML response
+                                             ↓
+                                        SQLite + FTS5
 ```
 
 ## Request Lifecycle
 
 1. Browser sends `GET /upload`
-2. `mux.HandleFunc("GET /upload", uploadGetHandler)` matches
-3. `uploadGetHandler` populates a `PageData` struct
-4. `render(w, "upload", data)` parses `base.html` + `upload.html`
-5. `base.html` renders the shell; `upload.html` fills the `{{template "content" .}}` slot
-6. Response is streamed to the browser
+2. `mux.HandleFunc("GET /upload", requireRole("uploader", uploadGetHandler))` matches
+3. `requireRole` checks the session cookie and confirms the user is an uploader or admin
+4. `uploadGetHandler` populates a `PageData` struct
+5. `render(w, r, "upload", data)` parses `base.html` + `upload.html`
+6. `base.html` renders the shell; `upload.html` fills the `{{template "content" .}}` slot
+7. Response is streamed to the browser
 
 ## Core Types (`main.go`)
 
@@ -44,13 +45,23 @@ type PageData struct {
 ### `Document`
 ```go
 type Document struct {
-    ID          string
-    Title       string       // English title
-    TitleNP     string       // Nepali title (Unicode Devanagari)
-    Category    string       // किताब | कागजात | रेकर्ड | पत्रिका | अंश | अन्य
-    Description string
-    FilePath    string       // URL to stored file (object storage)
-    CreatedAt   string       // formatted display date
+    ID           string
+    Title        string       // English title
+    TitleNP      string       // Nepali title (Unicode Devanagari)
+    Category     string       // किताब | कागजात | रेकर्ड | पत्रिका | अंश | अन्य
+    Description  string
+    BodyHTML     template.HTML
+    BodyText     string       // plain text copy used by search
+    Lang         string
+    Script       string
+    OrigAuthor   string
+    OrigAuthorNP string
+    OrigYear     string
+    OrigMonth    string
+    OrigDay      string
+    FilePath     string       // local development URL, e.g. /static/docs/file.pdf
+    UploadedBy   int
+    CreatedAt    string       // formatted display date
 }
 ```
 
@@ -71,16 +82,16 @@ type Excerpt struct {
 | GET | `/about` | `aboutHandler` | Public |
 | GET | `/works` | `worksHandler` | Public |
 | GET | `/document/{id}` | `documentHandler` | Public |
-| GET | `/document/{id}/edit` | `editGetHandler` | Admin* |
-| POST | `/document/{id}/edit` | `editPostHandler` | Admin* |
-| GET | `/upload` | `uploadGetHandler` | Public |
-| POST | `/upload` | `uploadPostHandler` | Public |
-| GET | `/dashboard` | `dashboardHandler` | Admin* |
+| GET | `/document/{id}/edit` | `editGetHandler` | Admin |
+| POST | `/document/{id}/edit` | `editPostHandler` | Admin |
+| GET | `/upload` | `uploadGetHandler` | Uploader+ |
+| POST | `/upload` | `uploadPostHandler` | Uploader+ |
+| GET | `/dashboard` | `dashboardHandler` | Admin |
 | GET | `/login` | `loginGetHandler` | Public |
 | POST | `/login` | `loginPostHandler` | Public |
 | POST | `/logout` | `logoutHandler` | Public |
 
-*Auth middleware stub exists in `main.go` — see `04-backend-integration.md`.
+`requireRole` enforces role tiers: `viewer`, `uploader`, then `admin`.
 
 ## Template System
 
@@ -118,9 +129,11 @@ mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("st
 | `/static/js/preeti-unicode.js` | Preeti → Unicode converter |
 | `/static/js/itrans-unicode.js` | ITRANS → Devanagari converter |
 
-## Mock Data Layer
+## Data Layer
 
-All data currently comes from in-memory Go functions (`mockDocuments()`, `mockExcerpts()`, etc.). Every function has a `// TODO:` comment with the exact SQL query to replace it with. See `04-backend-integration.md` for the full database schema.
+Documents, users, and sessions are stored in SQLite. `initDB` creates the schema on first run, `runMigrations` updates older databases, and `seedData` creates one sample document plus development admin/uploader accounts when the database is empty.
+
+Document search uses SQLite FTS5 with the `unicode61` tokenizer, indexing title, Nepali title, description, and plain body text. Excerpts, store items, mission content, and similar-site content are still static/template-backed.
 
 ## Categories
 

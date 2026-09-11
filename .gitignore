@@ -4,6 +4,7 @@ Thumbs.db
 
 # Local editor/agent state
 .claude/
+.tools/
 
 # Local environment and secrets
 .env
