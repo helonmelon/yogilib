@@ -7,7 +7,7 @@ Yogilib is a **pure Go stdlib web server** — no frameworks, no build pipeline,
 ```
 Browser → net/http Mux → Auth Middleware → Handler → html/template → HTML response
                                              ↓
-                                        SQLite + FTS5
+                                       Neon Postgres
 ```
 
 ## Request Lifecycle
@@ -131,9 +131,9 @@ mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("st
 
 ## Data Layer
 
-Documents, users, and sessions are stored in SQLite. `initDB` creates the schema on first run, `runMigrations` updates older databases, and `seedData` creates one sample document plus development admin/uploader accounts when the database is empty.
+Documents, users, and sessions are stored in Neon Postgres. `initDB` creates the schema on first run, and `seedData` creates the bilingual Sugowlee/Sugauli document plus development admin/uploader accounts when the database is empty.
 
-Document search uses SQLite FTS5 with the `unicode61` tokenizer, indexing title, Nepali title, description, and plain body text. Excerpts, store items, mission content, and similar-site content are still static/template-backed.
+Document search uses a Postgres GIN expression index over `to_tsvector('simple', ...)`, indexing title, Nepali title, description, and plain body text. Queries also use `ILIKE` fallback matching for short or partial text. Excerpts, store items, mission content, and similar-site content are still static/template-backed.
 
 ## Categories
 

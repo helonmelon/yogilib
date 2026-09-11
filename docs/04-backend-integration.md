@@ -1,12 +1,12 @@
 # Backend Integration Guide
 
-This document describes the backend currently wired into the app, plus the remaining production integrations.
+This document describes the Neon Postgres backend currently wired into the app, plus the remaining production integrations.
 
-## Current Database Schema (SQLite)
+## Current Database Schema (Neon Postgres)
 
 ```sql
 CREATE TABLE documents (
-    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    id             BIGSERIAL PRIMARY KEY,
     title          TEXT NOT NULL,
     title_np       TEXT,
     category       TEXT,
@@ -21,18 +21,20 @@ CREATE TABLE documents (
     orig_month     TEXT,
     orig_day       TEXT,
     file_path      TEXT,
-    uploaded_by    INTEGER,
+    uploaded_by    BIGINT,
     created_at     TEXT NOT NULL
 );
 
-CREATE VIRTUAL TABLE documents_fts USING fts5(
-    title, title_np, description, body_text,
-    content='documents', content_rowid='id',
-    tokenize='unicode61'
-);
+CREATE INDEX documents_search_idx ON documents
+USING GIN (to_tsvector('simple',
+    COALESCE(title, '') || ' ' ||
+    COALESCE(title_np, '') || ' ' ||
+    COALESCE(description, '') || ' ' ||
+    COALESCE(body_text, '')
+));
 
 CREATE TABLE users (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    id            BIGSERIAL PRIMARY KEY,
     email         TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     role          TEXT NOT NULL DEFAULT 'viewer'
@@ -40,23 +42,34 @@ CREATE TABLE users (
 
 CREATE TABLE sessions (
     token      TEXT PRIMARY KEY,
-    user_id    INTEGER NOT NULL REFERENCES users(id),
+    user_id    BIGINT NOT NULL REFERENCES users(id),
     expires_at TEXT NOT NULL
 );
 ```
 
-FTS triggers keep `documents_fts` synchronized after document inserts, updates, and deletes. Migrations are tracked with `PRAGMA user_version`.
+The app creates these tables and the search index automatically at startup. For larger production changes, move schema changes into a dedicated migration tool and run them with `DATABASE_URL_UNPOOLED`.
+
+## Neon Project
+
+This workspace is linked to Neon project `lucky-boat-33662130`, branch `production`. The local `.neon` file and `.env.local` file are intentionally ignored by Git because they contain local machine state and secrets.
+
+On another computer:
+
+```bash
+neon link --project-id lucky-boat-33662130 --branch production -y
+go run main.go
+```
 
 ## Handler Map
 
 | Route | Handler | Backing behavior |
 |-------|---------|------------------|
-| `GET /` | `indexHandler` | `queryDocuments(q, cat)` reads SQLite and FTS5 |
-| `GET /document/{id}` | `documentHandler` | `getDocumentByID(id)` reads SQLite |
+| `GET /` | `indexHandler` | `queryDocuments(q, cat)` reads Neon Postgres |
+| `GET /document/{id}` | `documentHandler` | `getDocumentByID(id)` reads Neon Postgres |
 | `GET /document/{id}/edit` | `editGetHandler` | admin-gated document edit form |
-| `POST /document/{id}/edit` | `editPostHandler` | admin-gated SQLite update |
+| `POST /document/{id}/edit` | `editPostHandler` | admin-gated Postgres update |
 | `GET /upload` | `uploadGetHandler` | uploader-gated upload form |
-| `POST /upload` | `uploadPostHandler` | uploader-gated multipart parse, local file save, SQLite insert |
+| `POST /upload` | `uploadPostHandler` | uploader-gated multipart parse, local file save, Postgres insert |
 | `GET /dashboard` | `dashboardHandler` | admin-gated `queryDocuments(q, cat)` |
 | `POST /login` | `loginPostHandler` | bcrypt password check and session creation |
 | `POST /logout` | `logoutHandler` | session delete and cookie clear |
@@ -68,18 +81,15 @@ POST /upload
   - r.ParseMultipartForm(50 << 20)    // 50 MB limit
   - validate fields (title required)
   - r.FormFile("file") -> save to /static/docs/
-  - INSERT INTO documents (title, title_np, category, description,
-      body_html, body_text, lang, script,
-      orig_author, orig_author_np, orig_year, orig_month, orig_day,
-      file_path, uploaded_by, created_at)
+  - INSERT INTO documents (...) RETURNING id
   - http.Redirect -> /document/{new_id}
 ```
 
-The current implementation stores development uploads locally under `/static/docs/`. For production, replace that block with object storage and keep `document.FilePath` as a browser-accessible URL, such as `https://cdn.yogilib.com/docs/treaty-1815.pdf`.
+The database is shared now, but uploaded files are still local to whichever computer handled the upload. For production or true multi-device uploads, replace local `/static/docs/` storage with object storage such as Neon Object Storage, Cloudflare R2, or S3.
 
 ## Authentication
 
-Authentication is live. Sessions are stored in SQLite and exposed through an `HttpOnly` cookie named `session`.
+Authentication is live. Sessions are stored in Postgres and exposed through an `HttpOnly` cookie named `session`.
 
 ```go
 func requireRole(role string, next http.HandlerFunc) http.HandlerFunc {
@@ -92,10 +102,6 @@ func requireRole(role string, next http.HandlerFunc) http.HandlerFunc {
         next(w, r)
     }
 }
-
-// Protect routes:
-mux.HandleFunc("GET /upload", requireRole("uploader", uploadGetHandler))
-mux.HandleFunc("GET /dashboard", requireRole("admin", dashboardHandler))
 ```
 
 Development seed users are created on the first run only:
@@ -113,22 +119,30 @@ Original author (`orig_author`, `orig_author_np`) is a separate field for the hi
 
 ## Search
 
-Current implementation: SQLite FTS5 with prefix matching.
+Current implementation: Postgres full-text search plus `ILIKE` fallback matching.
 
 ```sql
 SELECT d.*
 FROM documents d
-WHERE d.id IN (
-    SELECT rowid FROM documents_fts WHERE documents_fts MATCH ?
+WHERE (
+    to_tsvector('simple',
+        COALESCE(d.title, '') || ' ' ||
+        COALESCE(d.title_np, '') || ' ' ||
+        COALESCE(d.description, '') || ' ' ||
+        COALESCE(d.body_text, '')
+    ) @@ plainto_tsquery('simple', $1)
+    OR d.title ILIKE $2
+    OR d.title_np ILIKE $2
+    OR d.description ILIKE $2
+    OR d.body_text ILIKE $2
 )
 ORDER BY d.created_at DESC;
 ```
 
-The Go layer appends `*` to the submitted query for prefix matching and can combine search with category filtering.
-
 ## Remaining Production Work
 
-- Replace local `/static/docs/` file storage with R2, S3, or another object store.
-- Remove or rotate seeded development credentials before deploying.
+- Replace local `/static/docs/` file storage with shared object storage.
+- Remove or rotate seeded development credentials before public deployment.
+- Move schema management into a formal migration system.
 - Decide whether excerpts, store items, mission content, and similar-site content should remain static or move into database tables.
 - Add contributor display by joining `documents.uploaded_by` to `users`.

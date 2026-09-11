@@ -22,19 +22,21 @@ go build -o yogilib .
 # Custom port
 PORT=9000 ./yogilib
 
-# Optional: use a custom SQLite database path
-DB_PATH=/data/yogilib.db ./yogilib
 ```
 
-The server starts at **http://localhost:8080**.
+The server starts at **http://localhost:8080**. It requires `DATABASE_URL`; the app reads `.env.local` automatically when that file exists.
 
-On Windows PowerShell, use `$env:PORT="9000"` and `$env:DB_PATH="C:\path\to\yogilib.db"` before running the binary.
+On Windows PowerShell, use `$env:PORT="9000"` before running the binary. To pull the Neon connection string on a new machine, run:
+
+```bash
+neon link --project-id lucky-boat-33662130 --branch production -y
+```
 
 ## Project Layout
 
 ```
 yogilib-web/
-├── main.go                  # routes, handlers, SQLite setup, auth, PageData struct
+├── main.go                  # routes, handlers, Postgres setup, auth, PageData struct
 ├── go.mod
 ├── docs/                    # ← this documentation folder
 │   ├── 01-getting-started.md

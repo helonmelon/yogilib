@@ -2,21 +2,31 @@
 
 A digital archive for the works of **Yogi Narharinath** (योगी नरहरिनाथ) — Nepali scholar, historian, and religious figure. The site lets visitors browse, search, and read historical documents in English, Nepali, and Sanskrit, and lets contributors upload new material.
 
-Built with **Go** using `net/http` and `html/template`. Every page is server-rendered. The database is **SQLite with FTS5** (full-text search) — embedded, zero-config, single file.
+Built with **Go** using `net/http` and `html/template`. Every page is server-rendered. The shared database is **Neon Postgres**, so the same project data can be used from multiple computers.
 
 ---
 
 ## Quick start
 
 ```bash
-go mod tidy             # install dependencies
+go mod tidy             # install Go dependencies
 go run main.go          # dev server at http://localhost:8080
 go build -o yogilib .   # production binary
 PORT=9000 ./yogilib     # custom port
-DB_PATH=/data/yogi.db ./yogilib   # custom DB location (default: yogilib.db)
 ```
 
-Requires **Go 1.22+**.
+Requires **Go 1.22+** and a `DATABASE_URL`. The app automatically reads `.env.local` when present; Neon writes that file during `neon link`, `neon checkout`, and `neon deploy`.
+
+On a second computer:
+
+```bash
+git clone git@github.com:helonmelon/yogilib.git
+cd yogilib
+neon link --project-id lucky-boat-33662130 --branch production -y
+go run main.go
+```
+
+If you are not using the Neon CLI, copy `.env.example` to `.env.local` and fill in `DATABASE_URL`.
 
 ---
 
@@ -25,28 +35,28 @@ Requires **Go 1.22+**.
 | Area | Status |
 |---|---|
 | All public pages (home, about, works, document viewer, excerpts, store, similar sites) | Done |
-| SQLite database with FTS5 full-text search | Done |
+| Neon Postgres database with full-text search | Done |
 | Login system with session-based auth and role tiers | Done |
 | Contribute / upload form | Done |
 | Admin pages (dashboard, edit) | Done |
 | Preeti → Unicode converter (legacy Nepali encoding) | Done |
 | ITRANS → Devanagari converter (Sanskrit transliteration) | Done |
-| File / object storage (R2, S3) | Not connected |
+| File / object storage (R2, S3, Neon Object Storage) | Not connected |
 
 ---
 
 ## Stack
 
-```
-Browser → net/http Mux → Auth Middleware → Handler → html/template → HTML
-                                ↓
-                           SQLite + FTS5
+```text
+Browser -> net/http Mux -> Auth Middleware -> Handler -> html/template -> HTML
+                                |
+                           Neon Postgres
 ```
 
 - **Server**: `net/http` + `html/template`
-- **Database**: SQLite via `modernc.org/sqlite` (pure Go, no CGO)
-- **Search**: SQLite FTS5 with `unicode61` tokenizer — handles Devanagari and English
-- **Auth**: bcrypt passwords (`golang.org/x/crypto`), session tokens in SQLite, `HttpOnly` cookie
+- **Database**: Neon Postgres via `github.com/jackc/pgx/v5`
+- **Search**: Postgres full-text search with `to_tsvector('simple', ...)` plus `ILIKE` fallback
+- **Auth**: bcrypt passwords (`golang.org/x/crypto`), session tokens in Postgres, `HttpOnly` cookie
 - **Styles**: single `static/css/style.css`, Himalaya font for Devanagari
 - **Language support**: Unicode Devanagari, Preeti and ITRANS converters for legacy text
 
@@ -66,61 +76,39 @@ The site is **publicly readable** — no login needed to browse documents, excer
 
 ### Seeded accounts (development only)
 
-On first run, two mock accounts are created automatically:
+On first run against an empty database, two development accounts are created automatically:
 
 | Email | Password | Role |
 |---|---|---|
 | `admin@yogilib.org` | `admin123` | `admin` |
 | `upload@yogilib.org` | `upload123` | `uploader` |
 
-**Change these before deploying to production** — see [Adding users](#adding-users) below.
+**Change these before deploying to production.**
 
 ### Sessions
 
-- Sessions are stored in the `sessions` table in SQLite
+- Sessions are stored in the `sessions` table in Postgres
 - A random 64-character token is set as an `HttpOnly` cookie named `session`
 - Sessions expire after **30 days**
 - Logging out deletes the session from the database and clears the cookie
-
-### Adding users
-
-Insert directly into the database. Passwords must be bcrypt-hashed:
-
-```bash
-# Generate a bcrypt hash (Go one-liner)
-go run -e 'import "golang.org/x/crypto/bcrypt"; fmt.Println(string(must(bcrypt.GenerateFromPassword([]byte("yourpassword"), 12))))'
-
-# Or use any bcrypt tool, then insert:
-sqlite3 yogilib.db "INSERT INTO users (email, password_hash, role) VALUES ('you@example.com', '\$2a\$12\$...', 'admin');"
-```
 
 ---
 
 ## Database
 
-The database lives at `yogilib.db` by default (set `DB_PATH` to change). It is created automatically on first run.
+The app expects `DATABASE_URL` to point at Neon Postgres. Schema is created automatically on startup if the tables do not exist.
 
 ### Schema overview
 
 ```sql
--- Main documents table
-documents (id, title, title_np, category, description, file_path, created_at)
-
--- FTS5 full-text search index (auto-synced via triggers)
-documents_fts — searches title, title_np, description
-
--- Users
+documents (id, title, title_np, category, description, body_html, body_text, lang, script, orig_author, orig_author_np, orig_year, orig_month, orig_day, file_path, uploaded_by, created_at)
 users (id, email, password_hash, role)
-
--- Sessions
 sessions (token, user_id, expires_at)
 ```
 
 ### Search
 
-Search uses SQLite FTS5 with prefix matching. Typing `सुगौ` will find `सुगौली सन्धि`. Both Nepali (Devanagari) and English are indexed. The `unicode61` tokenizer handles Unicode correctly out of the box.
-
-When a document is inserted, updated, or deleted, triggers automatically keep `documents_fts` in sync — no manual indexing needed.
+Search indexes title, Nepali title, description, and body text through a Postgres GIN expression index. Queries use Postgres full-text search plus `ILIKE` matching so short Nepali/English snippets still work naturally.
 
 ---
 

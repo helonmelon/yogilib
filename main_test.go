@@ -5,20 +5,35 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 )
 
 func setupTestDB(t *testing.T) {
 	t.Helper()
+	testURL := os.Getenv("TEST_DATABASE_URL")
+	if testURL == "" {
+		t.Skip("set TEST_DATABASE_URL to run Postgres integration tests")
+	}
+	if appURL := os.Getenv("DATABASE_URL"); appURL != "" && appURL == testURL {
+		t.Fatal("TEST_DATABASE_URL must not match DATABASE_URL")
+	}
 	if db != nil {
 		db.Close()
 		db = nil
 	}
-	if err := initDB(t.TempDir() + "/yogilib-test.db"); err != nil {
+	if err := initDB(testURL); err != nil {
 		t.Fatalf("initDB: %v", err)
 	}
+	if _, err := db.Exec("TRUNCATE sessions, users, documents RESTART IDENTITY CASCADE"); err != nil {
+		t.Fatalf("reset test db: %v", err)
+	}
+	if err := seedData(); err != nil {
+		t.Fatalf("seedData: %v", err)
+	}
 	t.Cleanup(func() {
+		db.Exec("TRUNCATE sessions, users, documents RESTART IDENTITY CASCADE")
 		if db != nil {
 			db.Close()
 			db = nil
@@ -45,11 +60,18 @@ func TestRequireRoleRedirectsAnonymousUsers(t *testing.T) {
 	}
 }
 
+func TestStripHTMLCollapsesTextForSearch(t *testing.T) {
+	got := stripHTML("<p>rare <strong>search</strong></p>\n<p>token</p>")
+	if got != "rare search token" {
+		t.Fatalf("stripHTML() = %q, want %q", got, "rare search token")
+	}
+}
+
 func TestUploaderCanCreateDocument(t *testing.T) {
 	setupTestDB(t)
 
 	var userID int
-	if err := db.QueryRow(`SELECT id FROM users WHERE email = ?`, "upload@yogilib.org").Scan(&userID); err != nil {
+	if err := db.QueryRow(`SELECT id FROM users WHERE email = $1`, "upload@yogilib.org").Scan(&userID); err != nil {
 		t.Fatalf("find uploader: %v", err)
 	}
 	token, err := createSession(userID)
@@ -114,7 +136,7 @@ func TestSearchMatchesDocumentBodyText(t *testing.T) {
 
 	_, err := db.Exec(`
 		INSERT INTO documents (title, title_np, category, description, body_html, body_text, created_at)
-		VALUES (?, ?, ?, ?, ?, ?, ?)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`, "Body Search Test", "पूर्ण पाठ खोज", "अंश", "Search fixture", "<p>needlephrase</p>", "needlephrase", "11 Sep 2026")
 	if err != nil {
 		t.Fatalf("insert fixture: %v", err)

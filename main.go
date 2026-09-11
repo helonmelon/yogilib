@@ -19,8 +19,8 @@ import (
 	"strings"
 	"time"
 
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"golang.org/x/crypto/bcrypt"
-	_ "modernc.org/sqlite"
 )
 
 // ---------------------------------------------------------------------------
@@ -105,20 +105,42 @@ var db *sql.DB
 
 var docCategories = []string{"सबै", "किताब", "कागजात", "रेकर्ड", "पत्रिका", "अंश", "अन्य"}
 
-func initDB(path string) error {
+func loadEnvFile(path string) {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return
+	}
+	for _, line := range strings.Split(string(b), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") || !strings.Contains(line, "=") {
+			continue
+		}
+		parts := strings.SplitN(line, "=", 2)
+		key := strings.TrimSpace(parts[0])
+		value := strings.Trim(strings.TrimSpace(parts[1]), `"'`)
+		if key != "" && os.Getenv(key) == "" {
+			os.Setenv(key, value)
+		}
+	}
+}
+
+func initDB(databaseURL string) error {
+	if databaseURL == "" {
+		return fmt.Errorf("DATABASE_URL is required")
+	}
+
 	var err error
-	db, err = sql.Open("sqlite", path)
+	db, err = sql.Open("pgx", databaseURL)
 	if err != nil {
 		return err
 	}
-	db.SetMaxOpenConns(1) // SQLite: single writer
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(5)
+	db.SetConnMaxLifetime(time.Hour)
 
 	schema := `
-	PRAGMA journal_mode=WAL;
-	PRAGMA foreign_keys=ON;
-
 	CREATE TABLE IF NOT EXISTS documents (
-		id             INTEGER PRIMARY KEY AUTOINCREMENT,
+		id             BIGSERIAL PRIMARY KEY,
 		title          TEXT NOT NULL,
 		title_np       TEXT,
 		category       TEXT,
@@ -133,35 +155,12 @@ func initDB(path string) error {
 		orig_month     TEXT,
 		orig_day       TEXT,
 		file_path      TEXT,
-		uploaded_by    INTEGER,
+		uploaded_by    BIGINT,
 		created_at     TEXT NOT NULL
 	);
 
-	CREATE VIRTUAL TABLE IF NOT EXISTS documents_fts USING fts5(
-		title, title_np, description, body_text,
-		content='documents', content_rowid='id',
-		tokenize='unicode61'
-	);
-
-	CREATE TRIGGER IF NOT EXISTS docs_ai AFTER INSERT ON documents BEGIN
-		INSERT INTO documents_fts(rowid, title, title_np, description, body_text)
-		VALUES (new.id, new.title, COALESCE(new.title_np,''), COALESCE(new.description,''), COALESCE(new.body_text,''));
-	END;
-
-	CREATE TRIGGER IF NOT EXISTS docs_ad AFTER DELETE ON documents BEGIN
-		INSERT INTO documents_fts(documents_fts, rowid, title, title_np, description, body_text)
-		VALUES ('delete', old.id, old.title, COALESCE(old.title_np,''), COALESCE(old.description,''), COALESCE(old.body_text,''));
-	END;
-
-	CREATE TRIGGER IF NOT EXISTS docs_au AFTER UPDATE ON documents BEGIN
-		INSERT INTO documents_fts(documents_fts, rowid, title, title_np, description, body_text)
-		VALUES ('delete', old.id, old.title, COALESCE(old.title_np,''), COALESCE(old.description,''), COALESCE(old.body_text,''));
-		INSERT INTO documents_fts(rowid, title, title_np, description, body_text)
-		VALUES (new.id, new.title, COALESCE(new.title_np,''), COALESCE(new.description,''), COALESCE(new.body_text,''));
-	END;
-
 	CREATE TABLE IF NOT EXISTS users (
-		id            INTEGER PRIMARY KEY AUTOINCREMENT,
+		id            BIGSERIAL PRIMARY KEY,
 		email         TEXT UNIQUE NOT NULL,
 		password_hash TEXT NOT NULL,
 		role          TEXT NOT NULL DEFAULT 'viewer'
@@ -169,105 +168,24 @@ func initDB(path string) error {
 
 	CREATE TABLE IF NOT EXISTS sessions (
 		token      TEXT PRIMARY KEY,
-		user_id    INTEGER NOT NULL REFERENCES users(id),
+		user_id    BIGINT NOT NULL REFERENCES users(id),
 		expires_at TEXT NOT NULL
 	);
+
+	CREATE INDEX IF NOT EXISTS documents_search_idx ON documents
+	USING GIN (to_tsvector('simple',
+		COALESCE(title, '') || ' ' ||
+		COALESCE(title_np, '') || ' ' ||
+		COALESCE(description, '') || ' ' ||
+		COALESCE(body_text, '')
+	));
 	`
 
 	if _, err := db.Exec(schema); err != nil {
 		return fmt.Errorf("schema: %w", err)
 	}
 
-	if err := runMigrations(); err != nil {
-		return fmt.Errorf("migrations: %w", err)
-	}
-
 	return seedData()
-}
-
-// ---------------------------------------------------------------------------
-// Migrations
-// ---------------------------------------------------------------------------
-
-// runMigrations uses PRAGMA user_version to apply schema changes to existing DBs.
-// New DBs get the full schema above; existing DBs get ALTER TABLE patches.
-func runMigrations() error {
-	var version int
-	db.QueryRow("PRAGMA user_version").Scan(&version)
-
-	if version < 1 {
-		if err := migration1(); err != nil {
-			return fmt.Errorf("migration1: %w", err)
-		}
-		if _, err := db.Exec("PRAGMA user_version = 1"); err != nil {
-			return err
-		}
-		log.Println("migration1: applied")
-	}
-
-	return nil
-}
-
-// migration1: add extended document columns + rebuild FTS5 to include body_text.
-// Safe to run on both old (missing columns) and new (full schema) DBs.
-func migration1() error {
-	// Add new columns — ignore "duplicate column name" if already present
-	newCols := []string{
-		"ALTER TABLE documents ADD COLUMN body_html TEXT",
-		"ALTER TABLE documents ADD COLUMN body_text TEXT",
-		"ALTER TABLE documents ADD COLUMN lang TEXT",
-		"ALTER TABLE documents ADD COLUMN script TEXT",
-		"ALTER TABLE documents ADD COLUMN orig_author TEXT",
-		"ALTER TABLE documents ADD COLUMN orig_author_np TEXT",
-		"ALTER TABLE documents ADD COLUMN orig_year TEXT",
-		"ALTER TABLE documents ADD COLUMN orig_month TEXT",
-		"ALTER TABLE documents ADD COLUMN orig_day TEXT",
-		"ALTER TABLE documents ADD COLUMN uploaded_by INTEGER",
-	}
-	for _, stmt := range newCols {
-		if _, err := db.Exec(stmt); err != nil && !strings.Contains(err.Error(), "duplicate column name") {
-			return fmt.Errorf("%s: %w", stmt, err)
-		}
-	}
-
-	// Rebuild FTS5 table and triggers to include body_text.
-	// Drop old triggers first so they don't fire against the wrong schema.
-	ftsStmts := []string{
-		"DROP TRIGGER IF EXISTS docs_ai",
-		"DROP TRIGGER IF EXISTS docs_ad",
-		"DROP TRIGGER IF EXISTS docs_au",
-		"DROP TABLE IF EXISTS documents_fts",
-		`CREATE VIRTUAL TABLE documents_fts USING fts5(
-			title, title_np, description, body_text,
-			content='documents', content_rowid='id',
-			tokenize='unicode61'
-		)`,
-		`CREATE TRIGGER docs_ai AFTER INSERT ON documents BEGIN
-			INSERT INTO documents_fts(rowid, title, title_np, description, body_text)
-			VALUES (new.id, new.title, COALESCE(new.title_np,''), COALESCE(new.description,''), COALESCE(new.body_text,''));
-		END`,
-		`CREATE TRIGGER docs_ad AFTER DELETE ON documents BEGIN
-			INSERT INTO documents_fts(documents_fts, rowid, title, title_np, description, body_text)
-			VALUES ('delete', old.id, old.title, COALESCE(old.title_np,''), COALESCE(old.description,''), COALESCE(old.body_text,''));
-		END`,
-		`CREATE TRIGGER docs_au AFTER UPDATE ON documents BEGIN
-			INSERT INTO documents_fts(documents_fts, rowid, title, title_np, description, body_text)
-			VALUES ('delete', old.id, old.title, COALESCE(old.title_np,''), COALESCE(old.description,''), COALESCE(old.body_text,''));
-			INSERT INTO documents_fts(rowid, title, title_np, description, body_text)
-			VALUES (new.id, new.title, COALESCE(new.title_np,''), COALESCE(new.description,''), COALESCE(new.body_text,''));
-		END`,
-		// Repopulate from existing rows
-		`INSERT INTO documents_fts(rowid, title, title_np, description, body_text)
-		 SELECT id, title, COALESCE(title_np,''), COALESCE(description,''), COALESCE(body_text,'')
-		 FROM documents`,
-	}
-	for _, stmt := range ftsStmts {
-		if _, err := db.Exec(stmt); err != nil {
-			return fmt.Errorf("FTS rebuild: %w", err)
-		}
-	}
-
-	return nil
 }
 
 // ---------------------------------------------------------------------------
@@ -280,12 +198,35 @@ func seedData() error {
 	// Seed documents
 	db.QueryRow("SELECT COUNT(*) FROM documents").Scan(&count)
 	if count == 0 {
+		bodyHTML := sugowleeBodyHTML()
 		_, err := db.Exec(`
-			INSERT INTO documents (title, title_np, category, description, created_at) VALUES
-			('Treaty of Sugowlee', 'सुगौली सन्धि', 'कागजात',
-			 'Signed December 2, 1815 between East India Company and the Kingdom of Nepal.',
-			 ?)
-		`, time.Now().AddDate(0, 0, -3).Format("2 Jan 2006"))
+			INSERT INTO documents (
+				title, title_np, category, description,
+				body_html, body_text, lang, script,
+				orig_author, orig_author_np,
+				orig_year, orig_month, orig_day, created_at
+			) VALUES (
+				$1, $2, $3, $4,
+				$5, $6, $7, $8,
+				$9, $10,
+				$11, $12, $13, $14
+			)
+		`,
+			"Treaty of Sugowlee / Treaty of Sugauli",
+			"सुगौली सन्धि",
+			"कागजात",
+			"Full bilingual document text for the 1815 Treaty of Sugauli between the East India Company and the Kingdom of Nepal.",
+			bodyHTML,
+			stripHTML(bodyHTML),
+			"ne-en",
+			"mixed",
+			"East India Company and the Kingdom of Nepal",
+			"इस्ट इन्डिया कम्पनी र नेपाल अधिराज्य",
+			"1815",
+			"12",
+			"2",
+			time.Now().AddDate(0, 0, -3).Format("2 Jan 2006"),
+		)
 		if err != nil {
 			return err
 		}
@@ -304,7 +245,7 @@ func seedData() error {
 				return err
 			}
 			if _, err := db.Exec(
-				`INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)`,
+				`INSERT INTO users (email, password_hash, role) VALUES ($1, $2, $3)`,
 				u.email, string(hash), u.role,
 			); err != nil {
 				return err
@@ -326,6 +267,42 @@ func stripHTML(s string) string {
 	plain := reHTMLTags.ReplaceAllString(s, " ")
 	// Collapse whitespace
 	return strings.Join(strings.Fields(plain), " ")
+}
+
+func sugowleeBodyHTML() string {
+	return `<section>
+  <h2>सुगौली सन्धि / Treaty of Sugauli</h2>
+  <p><strong>Date:</strong> 2 December 1815; ratified 4 March 1816.</p>
+  <p><strong>Parties:</strong> The Honourable East India Company and the King of Nepal.</p>
+  <p><strong>Representatives:</strong> Lieutenant-Colonel Paris Bradshaw for the East India Company; Raj Guru Gajraj Mishra and Chandra Shekhar Upadhyay for Nepal.</p>
+
+  <h3>नेपाली रूपान्तरण</h3>
+  <p><strong>धारा १</strong> माननीय इस्ट इन्डिया कम्पनी र नेपालका राजाबीच चिरस्थायी शान्ति र मैत्री रहनेछ।</p>
+  <p><strong>धारा २</strong> नेपालका राजाले युद्धअघि दुई राज्यबीच विवादमा रहेका सबै भूमिमाथिको दाबी त्याग्नेछन्, र ती भूमिमाथि माननीय कम्पनीको सार्वभौमिक अधिकार स्वीकार गर्नेछन्।</p>
+  <p><strong>धारा ३</strong> नेपालका राजाले माननीय इस्ट इन्डिया कम्पनीलाई काली र राप्ती नदीबीचका तल्लो भूभाग, राप्ती र गण्डकीबीच बुटवल खासबाहेकका तल्लो भूभाग, गण्डकी र कोशीबीच ब्रिटिश अधिकार स्थापित भएका वा हुँदै गरेका तल्लो भूभाग, मेची र टिस्टाबीचका तल्लो भूभाग, र मेचीपूर्वका पहाडी भूभागहरू सदाका लागि हस्तान्तरण गर्छन्। यी भूभागहरू गोर्खाली सेनाले यस मितिबाट चालिस दिनभित्र खाली गर्नुपर्नेछ।</p>
+  <p><strong>धारा ४</strong> हस्तान्तरण गरिएका भूमिले क्षति पुगेका नेपाल राज्यका प्रमुख र भारदारहरूलाई क्षतिपूर्ति दिन ब्रिटिश सरकारले नेपालका राजाले छनोट गर्ने प्रमुखहरूलाई, राजाले तोक्ने अनुपातमा, वार्षिक जम्मा दुई लाख रुपैयाँ पेन्सन दिने सहमति गर्छ।</p>
+  <p><strong>धारा ५</strong> नेपालका राजाले आफैं, आफ्ना उत्तराधिकारी र वंशजहरूको तर्फबाट काली नदीको पश्चिमपट्टिका देशहरूमाथिको सबै दाबी र सम्बन्ध त्याग्छन्।</p>
+  <p><strong>धारा ६</strong> नेपालका राजाले सिक्किमका राजालाई उनका भूभागहरूको अधिकारमा कहिल्यै हैरान वा बाधा नगर्ने प्रतिज्ञा गर्छन्, र कुनै मतभेद उठेमा ब्रिटिश सरकारको मध्यस्थता स्वीकार गर्नेछन्।</p>
+  <p><strong>धारा ७</strong> नेपालका राजाले ब्रिटिश सरकारको स्वीकृतिविना कुनै ब्रिटिश प्रजा, वा कुनै युरोपेली अथवा अमेरिकी राज्यको प्रजालाई आफ्नो सेवामा नलिने वा सेवामा नराख्ने प्रतिज्ञा गर्छन्।</p>
+  <p><strong>धारा ८</strong> यस सन्धिबाट स्थापित मैत्री र शान्तिको सम्बन्ध सुरक्षित र सुदृढ पार्न, प्रत्येक राज्यबाट मान्यताप्राप्त मन्त्री अर्को राज्यको दरबारमा बस्ने सहमति गरिन्छ।</p>
+  <p><strong>धारा ९</strong> नौ धाराबाट बनेको यो सन्धि नेपालका राजाले यस मितिबाट पन्ध्र दिनभित्र अनुमोदन गर्नेछन्, र अनुमोदन लेफ्टिनेन्ट-कर्नेल ब्राडशालाई बुझाइनेछ।</p>
+
+  <h3>English Text</h3>
+  <p><strong>Article I</strong> There shall be perpetual peace and friendship between the Honourable East India Company and the King of Nepal.</p>
+  <p><strong>Article II</strong> The Rajah of Nepal renounces all claim to the lands which were the subject of discussion between the two States before the war, and acknowledges the right of the Honourable Company to the sovereignty of those lands.</p>
+  <p><strong>Article III</strong> The Rajah of Nepal hereby cedes to the Honourable the East India Company in perpetuity the lowlands between the Rivers Kali and Rapti; the lowlands, except Bootwul Khass, between the Rapti and Gunduck; the lowlands between the Gunduck and Coosah where British authority had been introduced or was being introduced; the lowlands between the Mitchee and Teestah; and hill territories eastward of the River Mitchee, including Nagree and the Pass of Nagarcote. The Gurkha troops shall evacuate the territory within forty days.</p>
+  <p><strong>Article IV</strong> To indemnify the Chiefs and Barahdars of Nepal whose interests suffer by the cession, the British Government agrees to settle pensions totaling two lakhs of rupees per annum on chiefs selected by the Rajah of Nepal.</p>
+  <p><strong>Article V</strong> The Rajah of Nepal renounces for himself, his heirs, and successors all claim to or connection with the countries lying to the west of the River Kali.</p>
+  <p><strong>Article VI</strong> The Rajah of Nepal agrees not to disturb the Rajah of Sikkim in his territories, and to refer disputes with Sikkim to the arbitration of the British Government.</p>
+  <p><strong>Article VII</strong> The Rajah of Nepal agrees not to take or retain in his service any British subject, or any subject of a European or American state, without the consent of the British Government.</p>
+  <p><strong>Article VIII</strong> To secure and improve relations of amity and peace, accredited ministers from each state shall reside at the court of the other.</p>
+  <p><strong>Article IX</strong> This treaty, consisting of nine articles, shall be ratified by the Rajah of Nepal within fifteen days, and the Governor-General's ratification shall be obtained and delivered as soon as practicable.</p>
+
+  <h3>Source Notes</h3>
+  <p>English text follows the public-domain Wikisource transcription of the Treaty of Sugauli, with a Nepali rendering prepared from the same clauses and cross-checked against Nepali references.</p>
+  <p><a href="https://en.wikisource.org/wiki/Treaty_of_Sugauli">English source: Wikisource</a></p>
+  <p><a href="https://ne.wikipedia.org/wiki/%E0%A4%B8%E0%A5%81%E0%A4%97%E0%A5%8C%E0%A4%B2%E0%A5%80_%E0%A4%B8%E0%A4%A8%E0%A5%8D%E0%A4%A7%E0%A4%BF">Nepali background: Wikipedia</a></p>
+</section>`
 }
 
 // ---------------------------------------------------------------------------
@@ -376,33 +353,56 @@ func queryDocuments(q, cat string) []Document {
 	catFilter := cat != "" && cat != "सबै"
 
 	if q != "" {
-		ftsQuery := strings.TrimSpace(q) + "*" // prefix match
+		ftsQuery := strings.TrimSpace(q)
+		likeQuery := "%" + ftsQuery + "%"
 		if catFilter {
 			rows, err = db.Query(`
 				SELECT `+docSelectCols+`
 				FROM documents d
-				WHERE d.id IN (SELECT rowid FROM documents_fts WHERE documents_fts MATCH ?)
-				  AND d.category = ?
+				WHERE (
+					to_tsvector('simple',
+						COALESCE(d.title, '') || ' ' ||
+						COALESCE(d.title_np, '') || ' ' ||
+						COALESCE(d.description, '') || ' ' ||
+						COALESCE(d.body_text, '')
+					) @@ plainto_tsquery('simple', $1)
+					OR d.title ILIKE $2
+					OR d.title_np ILIKE $2
+					OR d.description ILIKE $2
+					OR d.body_text ILIKE $2
+				)
+				  AND d.category = $3
 				ORDER BY d.created_at DESC
-			`, ftsQuery, cat)
+			`, ftsQuery, likeQuery, cat)
 		} else {
 			rows, err = db.Query(`
 				SELECT `+docSelectCols+`
 				FROM documents d
-				WHERE d.id IN (SELECT rowid FROM documents_fts WHERE documents_fts MATCH ?)
+				WHERE (
+					to_tsvector('simple',
+						COALESCE(d.title, '') || ' ' ||
+						COALESCE(d.title_np, '') || ' ' ||
+						COALESCE(d.description, '') || ' ' ||
+						COALESCE(d.body_text, '')
+					) @@ plainto_tsquery('simple', $1)
+					OR d.title ILIKE $2
+					OR d.title_np ILIKE $2
+					OR d.description ILIKE $2
+					OR d.body_text ILIKE $2
+				)
 				ORDER BY d.created_at DESC
-			`, ftsQuery)
+			`, ftsQuery, likeQuery)
 		}
 	} else if catFilter {
 		rows, err = db.Query(`
 			SELECT `+docSelectCols+`
 			FROM documents d
-			WHERE d.category = ?
+			WHERE d.category = $1
 			ORDER BY d.created_at DESC
-		`, cat)
+	`, cat)
 	} else {
 		rows, err = db.Query(`
-			SELECT `+docSelectCols+`
+			SELECT ` + docSelectCols + `
 			FROM documents d
 			ORDER BY d.created_at DESC
 		`)
@@ -430,7 +430,7 @@ func getDocumentByID(id string) *Document {
 	row := db.QueryRow(`
 		SELECT `+docSelectCols+`
 		FROM documents d
-		WHERE d.id = ?
+		WHERE d.id = $1
 	`, id)
 	d, err := scanDoc(row)
 	if err != nil {
@@ -473,13 +473,13 @@ func newToken() string {
 func createSession(userID int) (string, error) {
 	token := newToken()
 	expires := time.Now().Add(30 * 24 * time.Hour).Format(time.RFC3339)
-	_, err := db.Exec(`INSERT INTO sessions (token, user_id, expires_at) VALUES (?, ?, ?)`,
+	_, err := db.Exec(`INSERT INTO sessions (token, user_id, expires_at) VALUES ($1, $2, $3)`,
 		token, userID, expires)
 	return token, err
 }
 
 func deleteSession(token string) {
-	db.Exec(`DELETE FROM sessions WHERE token = ?`, token)
+	db.Exec(`DELETE FROM sessions WHERE token = $1`, token)
 }
 
 func sessionUser(r *http.Request) *User {
@@ -492,7 +492,7 @@ func sessionUser(r *http.Request) *User {
 	err = db.QueryRow(`
 		SELECT u.id, u.email, u.role, s.expires_at
 		FROM sessions s JOIN users u ON u.id = s.user_id
-		WHERE s.token = ?
+		WHERE s.token = $1
 	`, cookie.Value).Scan(&u.ID, &u.Email, &u.Role, &expiresAt)
 	if err != nil {
 		return nil
@@ -636,20 +636,20 @@ func editPostHandler(w http.ResponseWriter, r *http.Request) {
 	bodyHTML := r.FormValue("body_html")
 	_, err := db.Exec(`
 		UPDATE documents SET
-			title          = ?,
-			title_np       = ?,
-			category       = ?,
-			description    = ?,
-			lang           = ?,
-			script         = ?,
-			orig_author    = ?,
-			orig_author_np = ?,
-			orig_year      = ?,
-			orig_month     = ?,
-			orig_day       = ?,
-			body_html      = ?,
-			body_text      = ?
-		WHERE id = ?
+			title          = $1,
+			title_np       = $2,
+			category       = $3,
+			description    = $4,
+			lang           = $5,
+			script         = $6,
+			orig_author    = $7,
+			orig_author_np = $8,
+			orig_year      = $9,
+			orig_month     = $10,
+			orig_day       = $11,
+			body_html      = $12,
+			body_text      = $13
+		WHERE id = $14
 	`,
 		r.FormValue("title"),
 		r.FormValue("title_np"),
@@ -735,7 +735,8 @@ func uploadPostHandler(w http.ResponseWriter, r *http.Request) {
 		uploadedBy = u.ID
 	}
 
-	result, err := db.Exec(`
+	var id int64
+	err := db.QueryRow(`
 		INSERT INTO documents (
 			title, title_np, category, description,
 			body_html, body_text,
@@ -743,7 +744,15 @@ func uploadPostHandler(w http.ResponseWriter, r *http.Request) {
 			orig_author, orig_author_np,
 			orig_year, orig_month, orig_day,
 			file_path, uploaded_by, created_at
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		) VALUES (
+			$1, $2, $3, $4,
+			$5, $6,
+			$7, $8,
+			$9, $10,
+			$11, $12, $13,
+			$14, $15, $16
+		)
+		RETURNING id
 	`,
 		title,
 		r.FormValue("title_np"),
@@ -761,14 +770,13 @@ func uploadPostHandler(w http.ResponseWriter, r *http.Request) {
 		filePath,
 		uploadedBy,
 		time.Now().Format("2 Jan 2006"),
-	)
+	).Scan(&id)
 	if err != nil {
 		log.Println("uploadPost:", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 
-	id, _ := result.LastInsertId()
 	http.Redirect(w, r, "/document/"+strconv.FormatInt(id, 10), http.StatusSeeOther)
 }
 
@@ -803,7 +811,7 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 	var u User
 	var hash string
 	err := db.QueryRow(
-		`SELECT id, email, password_hash, role FROM users WHERE email = ?`, email,
+		`SELECT id, email, password_hash, role FROM users WHERE email = $1`, email,
 	).Scan(&u.ID, &u.Email, &hash, &u.Role)
 	if err != nil || bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) != nil {
 		render(w, r, "login", PageData{Title: "Login", Error: "Invalid email or password."})
@@ -844,11 +852,8 @@ func dashboardHandler(w http.ResponseWriter, r *http.Request) {
 // ---------------------------------------------------------------------------
 
 func main() {
-	dbPath := os.Getenv("DB_PATH")
-	if dbPath == "" {
-		dbPath = "yogilib.db"
-	}
-	if err := initDB(dbPath); err != nil {
+	loadEnvFile(".env.local")
+	if err := initDB(os.Getenv("DATABASE_URL")); err != nil {
 		log.Fatal("db:", err)
 	}
 	defer db.Close()
