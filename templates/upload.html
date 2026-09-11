@@ -14,10 +14,10 @@
   }
   .contribute-page h1 {
     font-family: 'Labrada', serif;
-    font-size: 2rem;
+    font-size: 1.8rem;
     text-align: center;
     margin-bottom: 0.25rem;
-    color: var(--accent, #8b3a3a);
+    color: var(--forest);
   }
   .contribute-page .subtitle {
     text-align: center;
@@ -33,11 +33,10 @@
 
   /* ── Form card ───────────────────────────────────────────── */
   .editor-card {
-    background: #fff;
-    border: 1px solid #e8ddd0;
-    border-radius: 12px;
+    background: #faf9f7;
+    border: 1px solid var(--border);
+    border-radius: 8px;
     padding: 2rem;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
   }
 
   /* ── Form groups ─────────────────────────────────────────── */
@@ -64,10 +63,11 @@
   }
   .fg input:focus, .fg select:focus {
     outline: none;
-    border-color: var(--accent, #8b3a3a);
+    border-color: var(--forest);
     background: #fff;
   }
   .fg .hint { font-size: 0.8rem; color: #888; margin-top: 0.3rem; }
+  .fg-tight { margin-bottom: 0; }
 
   /* ── Two-column grid for titles ──────────────────────────── */
   .fg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
@@ -113,7 +113,7 @@
     border-radius: 4px; background: #f0f0f0; cursor: pointer;
     font-family: inherit; transition: all 0.15s;
   }
-  .np-badge button.active { background: var(--accent,#8b3a3a); color: #fff; border-color: var(--accent,#8b3a3a); }
+  .np-badge button.active { background: var(--forest); color: #fff; border-color: var(--forest); }
 
   /* ── Preeti converter panel ──────────────────────────────── */
   .preeti-panel {
@@ -174,7 +174,7 @@
     border: 1.5px solid #ddd; background: #f5f5f5; cursor: pointer;
     font-family: inherit; transition: all 0.15s;
   }
-  .editor-lang-bar button.active { background: var(--accent,#8b3a3a); color: #fff; border-color: var(--accent,#8b3a3a); }
+  .editor-lang-bar button.active { background: var(--forest); color: #fff; border-color: var(--forest); }
 
   #editor-container {
     border: 1.5px solid #ddd; border-radius: 0 0 8px 8px;
@@ -206,12 +206,12 @@
   /* ── Submit area ─────────────────────────────────────────── */
   .submit-area { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; flex-wrap: wrap; }
   .btn-primary {
-    background: var(--accent, #8b3a3a); color: #fff;
+    background: var(--orange); color: #fff;
     border: none; border-radius: 8px; padding: 0.75rem 2rem;
     font-size: 1rem; font-family: inherit; font-weight: 700;
     cursor: pointer; transition: background 0.2s;
   }
-  .btn-primary:hover { background: #6d2a2a; }
+  .btn-primary:hover { background: var(--red); }
   .btn-secondary {
     background: transparent; color: #555;
     border: 1.5px solid #ccc; border-radius: 8px;
@@ -240,12 +240,141 @@
   .editor-tabs button:first-child { border-radius: 8px 0 0 0; }
   .editor-tabs button:last-child  { border-radius: 0 8px 0 0; }
   .editor-tabs button.active {
-    background: #fff; color: var(--accent,#8b3a3a);
-    border-bottom-color: #fff; border-top-color: var(--accent,#8b3a3a);
+    background: #fff; color: var(--forest);
+    border-bottom-color: #fff; border-top-color: var(--forest);
     z-index: 1;
   }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
+
+  .html-source {
+    border: 1.5px solid #ddd;
+    border-radius: 0 0 8px 8px;
+    box-sizing: border-box;
+    font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
+    font-size: 0.85rem;
+    min-height: 280px;
+    padding: 0.8rem;
+    resize: vertical;
+    width: 100%;
+  }
+
+  .badge-tools {
+    background: #7a4a1e;
+  }
+
+  .converter-intro {
+    color: #7a4a1e;
+    font-size: 0.82rem;
+    margin: 0 0 0.8rem;
+  }
+
+  .converter-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1rem;
+  }
+
+  .converter-tab {
+    background: #f5ede3;
+    border: 1.5px solid #c9a07a;
+    color: #7a4a1e;
+    cursor: pointer;
+    flex: 1;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.45rem;
+  }
+
+  .converter-tab:first-child {
+    border-radius: 6px 0 0 6px;
+  }
+
+  .converter-tab:last-child {
+    border-radius: 0 6px 6px 0;
+  }
+
+  .converter-tab.active {
+    background: #7a4a1e;
+    color: #fff;
+  }
+
+  .converter-pane-hidden,
+  .file-input-hidden {
+    display: none;
+  }
+
+  .converter-help {
+    color: #888;
+    font-size: 0.79rem;
+    margin: 0 0 0.6rem;
+  }
+
+  .converter-label {
+    color: #7a4a1e;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .converter-reference {
+    color: #999;
+    font-size: 0.76rem;
+    line-height: 1.7;
+    margin-top: 0.8rem;
+  }
+
+  .drop-zone.has-file {
+    border-color: #2e7d32;
+  }
+
+  @media (max-width: 640px) {
+    .contribute-page {
+      padding: 1rem 0 3rem;
+    }
+    .contribute-page h1 {
+      font-size: 1.5rem;
+    }
+    .contribute-page .subtitle {
+      margin-bottom: 1.25rem;
+    }
+    .editor-card,
+    .author-section,
+    .preeti-panel {
+      padding: 1rem;
+    }
+    .editor-lang-bar,
+    .editor-tabs,
+    .converter-tabs,
+    .submit-area {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .editor-tabs button,
+    .editor-tabs button:first-child,
+    .editor-tabs button:last-child,
+    .converter-tab,
+    .converter-tab:first-child,
+    .converter-tab:last-child {
+      border-radius: 6px;
+    }
+    .np-wrap input {
+      padding-right: 0.9rem;
+      padding-bottom: 2.3rem;
+    }
+    .np-badge {
+      top: auto;
+      bottom: 0.45rem;
+      transform: none;
+    }
+    #editor-container {
+      min-height: 240px;
+    }
+    .ql-editor {
+      min-height: 220px;
+    }
+  }
 </style>
 
 <div class="contribute-page">
@@ -364,13 +493,13 @@
     <div class="author-section">
       <h4>✍️ Authorship / लेखक विवरण</h4>
       <div class="fg-row">
-        <div class="fg" style="margin-bottom:0">
+        <div class="fg fg-tight">
           <label for="orig_author">Original Author / मूल लेखक</label>
           <input type="text" id="orig_author" name="orig_author"
                  placeholder="e.g. Yogi Narharinath / योगी नरहरिनाथ">
           <div class="hint">Who originally wrote or compiled this document.</div>
         </div>
-        <div class="fg" style="margin-bottom:0">
+        <div class="fg fg-tight">
           <label for="orig_author_np">Original Author (नेपाली)</label>
           <div class="np-wrap">
             <input type="text" id="orig_author_np" name="orig_author_np"
@@ -414,26 +543,26 @@
         <div class="char-info"><span id="char-count">0</span> characters</div>
       </div>
       <div id="panel-source" class="tab-panel">
-        <textarea id="html-source" style="width:100%;min-height:280px;font-family:monospace;font-size:0.85rem;border:1.5px solid #ddd;border-radius:0 0 8px 8px;padding:0.8rem;box-sizing:border-box;resize:vertical;"></textarea>
+        <textarea id="html-source" class="html-source"></textarea>
       </div>
     </div>
 
     <!-- ── Script Converters (tabbed: Preeti | ITRANS) ──────── -->
     <div class="preeti-panel" id="converter-panel">
-      <h3>🔠 Script Converters <span class="badge-preeti" style="background:#7a4a1e">TOOLS</span></h3>
-      <p style="font-size:0.82rem;color:#7a4a1e;margin:0 0 0.8rem;">
+      <h3>🔠 Script Converters <span class="badge-preeti badge-tools">TOOLS</span></h3>
+      <p class="converter-intro">
         Convert old encoding schemes to proper Unicode Devanagari, then insert into the editor.
       </p>
 
       <!-- Converter tabs -->
-      <div style="display:flex;gap:0;margin-bottom:1rem;">
+      <div class="converter-tabs">
         <button type="button" id="cv-preeti-tab"
-          style="flex:1;padding:0.45rem;border:1.5px solid #c9a07a;border-radius:6px 0 0 6px;background:#7a4a1e;color:#fff;font-family:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;"
+          class="converter-tab active"
           onclick="switchConverter('preeti')">
           🇳 Preeti → Unicode (नेपाली)
         </button>
         <button type="button" id="cv-itrans-tab"
-          style="flex:1;padding:0.45rem;border:1.5px solid #c9a07a;border-radius:0 6px 6px 0;background:#f5ede3;color:#7a4a1e;font-family:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;"
+          class="converter-tab"
           onclick="switchConverter('itrans')">
           🕉️ ITRANS → Devanagari (संस्कृत)
         </button>
@@ -441,17 +570,17 @@
 
       <!-- Preeti pane -->
       <div id="cv-preeti">
-        <p style="font-size:0.79rem;color:#888;margin:0 0 0.6rem;">
+        <p class="converter-help">
           For Nepali text typed in <strong>Preeti font</strong> (old MS Word, OCR).
         </p>
         <div class="preeti-io">
           <div>
-            <div style="font-size:0.8rem;font-weight:600;color:#7a4a1e;margin-bottom:0.3rem;">Preeti Input</div>
+            <div class="converter-label">Preeti Input</div>
             <textarea id="preeti-input" placeholder="Paste Preeti text here…&#10;e.g. k'/n ;doGjoy sfo{qmd"></textarea>
           </div>
           <div class="preeti-arrow">→</div>
           <div>
-            <div style="font-size:0.8rem;font-weight:600;color:#7a4a1e;margin-bottom:0.3rem;">Unicode Output (नेपाली)</div>
+            <div class="converter-label">Unicode Output (नेपाली)</div>
             <textarea id="uni-output" readonly placeholder="Converted Unicode will appear here…"></textarea>
           </div>
         </div>
@@ -463,19 +592,19 @@
       </div>
 
       <!-- ITRANS pane -->
-      <div id="cv-itrans" style="display:none;">
-        <p style="font-size:0.79rem;color:#888;margin:0 0 0.6rem;">
+      <div id="cv-itrans" class="converter-pane-hidden">
+        <p class="converter-help">
           For <strong>Sanskrit</strong> (and Nepali) in <strong>ITRANS</strong> — ASCII transliteration used in academic Sanskrit texts.<br>
           Examples: <code>dharma</code> → धर्म &nbsp;|&nbsp; <code>namaH</code> → नमः &nbsp;|&nbsp; <code>saMskRRitam</code> → संस्कृतम् &nbsp;|&nbsp; <code>OM</code> → ॐ
         </p>
         <div class="preeti-io">
           <div>
-            <div style="font-size:0.8rem;font-weight:600;color:#7a4a1e;margin-bottom:0.3rem;">ITRANS Input (Sanskrit)</div>
+            <div class="converter-label">ITRANS Input (Sanskrit)</div>
             <textarea id="itrans-input" placeholder="Type or paste ITRANS here…&#10;e.g. namaH shivAya&#10;dharmaH rakShati rakShitaH"></textarea>
           </div>
           <div class="preeti-arrow">→</div>
           <div>
-            <div style="font-size:0.8rem;font-weight:600;color:#7a4a1e;margin-bottom:0.3rem;">Devanagari Output</div>
+            <div class="converter-label">Devanagari Output</div>
             <textarea id="itrans-output" readonly placeholder="Converted Devanagari will appear here…"></textarea>
           </div>
         </div>
@@ -484,7 +613,7 @@
           <button type="button" class="btn-insert" onclick="insertFromConverter('itrans')">↑ Insert into Editor</button>
           <button type="button" class="btn-insert" onclick="clearConverter('itrans')">✕ Clear</button>
         </div>
-        <div style="font-size:0.76rem;color:#aaa;margin-top:0.8rem;line-height:1.7;">
+        <div class="converter-reference">
           📚 Quick ref: <strong>k kh g gh c ch j jh T Th D Dh N t th d dh n p ph b bh m y r l v s sh Sh h</strong> = consonants<br>
           <strong>a A i I u U e o ai au</strong> = vowels &nbsp;|&nbsp;
           <strong>M H</strong> = anusvara/visarga &nbsp;|&nbsp;
@@ -502,7 +631,7 @@
       <div class="drop-zone" id="drop-zone">
         <span class="dz-icon">📄</span>
         <span id="drop-label">Drag & drop file here, or click to browse</span>
-        <input type="file" id="file" name="file" style="display:none"
+        <input type="file" id="file" name="file" class="file-input-hidden"
                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff">
       </div>
       <div class="hint">Accepted: PDF, Word, JPEG, PNG, TIFF. Max 50 MB.</div>
@@ -680,19 +809,16 @@ function switchConverter(mode) {
   const preetiPane = document.getElementById('cv-preeti');
   const itransPane = document.getElementById('cv-itrans');
 
-  const activeStyle   = { background: '#7a4a1e', color: '#fff' };
-  const inactiveStyle = { background: '#f5ede3', color: '#7a4a1e' };
-
   if (mode === 'preeti') {
-    Object.assign(preetiTab.style, activeStyle);
-    Object.assign(itransTab.style, inactiveStyle);
-    preetiPane.style.display = '';
-    itransPane.style.display = 'none';
+    preetiTab.classList.add('active');
+    itransTab.classList.remove('active');
+    preetiPane.classList.remove('converter-pane-hidden');
+    itransPane.classList.add('converter-pane-hidden');
   } else {
-    Object.assign(itransTab.style, activeStyle);
-    Object.assign(preetiTab.style, inactiveStyle);
-    itransPane.style.display = '';
-    preetiPane.style.display = 'none';
+    itransTab.classList.add('active');
+    preetiTab.classList.remove('active');
+    itransPane.classList.remove('converter-pane-hidden');
+    preetiPane.classList.add('converter-pane-hidden');
   }
 }
 
@@ -742,7 +868,7 @@ zone.addEventListener('click', () => input.click());
 input.addEventListener('change', () => {
   if (input.files[0]) {
     label.textContent = '✅ ' + input.files[0].name;
-    zone.style.borderColor = '#28a745';
+    zone.classList.add('has-file');
   }
 });
 zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('dragging'); });
@@ -752,7 +878,7 @@ zone.addEventListener('drop', e => {
   if (e.dataTransfer.files[0]) {
     input.files = e.dataTransfer.files;
     label.textContent = '✅ ' + e.dataTransfer.files[0].name;
-    zone.style.borderColor = '#28a745';
+    zone.classList.add('has-file');
   }
 });
 

@@ -34,7 +34,7 @@
     </div>
 
     <!-- Language / Script -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div class="form-grid form-grid-2">
       <div class="form-group">
         <label for="lang">भाषा / Language</label>
         <select id="lang" name="lang">
@@ -60,7 +60,7 @@
     </div>
 
     <!-- Original Date -->
-    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:1rem">
+    <div class="form-grid form-grid-date">
       <div class="form-group">
         <label for="orig_year">Original Year / मूल वर्ष</label>
         <input type="text" id="orig_year" name="orig_year" value="{{.Doc.OrigYear}}" placeholder="e.g. 1815">
@@ -90,7 +90,7 @@
     </div>
 
     <!-- Authors -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div class="form-grid form-grid-2">
       <div class="form-group">
         <label for="orig_author">Original Author (English)</label>
         <input type="text" id="orig_author" name="orig_author" value="{{.Doc.OrigAuthor}}">
@@ -110,17 +110,15 @@
     <!-- Body HTML (raw edit for admins) -->
     <div class="form-group">
       <label for="body_html">Content Body (HTML)</label>
-      <textarea id="body_html" name="body_html"
-                style="font-family:monospace;font-size:0.85rem;min-height:200px"
-      >{{.Doc.BodyHTML}}</textarea>
-      <div style="font-size:0.78rem;color:#888;margin-top:0.3rem">
+      <textarea id="body_html" class="code-textarea" name="body_html">{{.Doc.BodyHTML}}</textarea>
+      <div class="form-hint">
         Raw HTML from the rich text editor. Edit with care.
       </div>
     </div>
 
-    <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+    <div class="form-actions">
       <button type="submit" class="btn btn-primary">परिवर्तन सुरक्षित गर्नुहोस्</button>
-      <a href="/document/{{.Doc.ID}}" class="btn btn-forest" style="text-decoration:none;line-height:1.6">रद्द गर्नुहोस्</a>
+      <a href="/document/{{.Doc.ID}}" class="btn btn-forest btn-link">रद्द गर्नुहोस्</a>
     </div>
   </form>
 </div>
