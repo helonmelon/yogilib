@@ -1,0 +1,31 @@
+# Operating system clutter
+.DS_Store
+Thumbs.db
+
+# Local editor/agent state
+.claude/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Go build output
+/yogilib
+/yogilib.exe
+*.test
+*.out
+
+# Local SQLite databases and sidecar files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Local uploaded files during development
+/static/docs/
+
+# Logs and temporary files
+*.log
+/tmp/
