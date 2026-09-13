@@ -11,6 +11,7 @@ Built with **Go** using `net/http` and `html/template`. Every page is server-ren
 ```bash
 go mod tidy             # install Go dependencies
 go run main.go          # dev server at http://localhost:8080
+DEV_RELOAD=1 go run main.go # dev server with browser auto-reload
 go build -o yogilib .   # production binary
 PORT=9000 ./yogilib     # custom port
 ```
@@ -28,6 +29,8 @@ go run main.go
 
 If you are not using the Neon CLI, copy `.env.example` to `.env.local` and fill in `DATABASE_URL`.
 
+`DEV_RELOAD=1` enables a development-only watcher for templates, reader CSS, and reader JavaScript. Ordinary runs do not poll for changes.
+
 ---
 
 ## What's in the box
@@ -39,6 +42,9 @@ If you are not using the Neon CLI, copy `.env.example` to `.env.local` and fill 
 | Login system with session-based auth and role tiers | Done |
 | Contribute / upload form | Done |
 | Admin pages (dashboard, edit) | Done |
+| Document reader controls, typography, navigation, passage links, and responsive original/transcription view | Done |
+| Private reader notes and admin revision history | Done |
+| Development browser auto-reload (`DEV_RELOAD=1`) | Done |
 | Preeti → Unicode converter (legacy Nepali encoding) | Done |
 | ITRANS → Devanagari converter (Sanskrit transliteration) | Done |
 | File / object storage (R2, S3, Neon Object Storage) | Not connected |
@@ -113,6 +119,10 @@ Search indexes title, Nepali title, description, and body text through a Postgre
 ---
 
 ## Docs
+
+Document pages include a clickable table of contents, adjustable reading settings, in-document search, copyable passage links, responsive original/transcription viewing, private signed-in notes, and admin revision restore. Reading preferences are stored in the browser. Uploaded files remain local under `static/docs` until shared object storage is connected.
+
+For repeatable work, prefer deterministic Go code and small scripts. Use AI for design exploration or unfamiliar problems when useful, then keep changes reviewable and testable. Bundle related work and run targeted validation to conserve resources.
 
 | File | What it covers |
 |---|---|

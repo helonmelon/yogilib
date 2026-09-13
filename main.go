@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
@@ -81,6 +82,7 @@ type PageData struct {
 	Exc        *Excerpt
 	StoreItems []StoreItem
 	User       *User // nil when not logged in
+	DevReload  bool
 }
 
 // ---------------------------------------------------------------------------
@@ -139,6 +141,15 @@ func initDB(databaseURL string) error {
 	db.SetConnMaxLifetime(time.Hour)
 
 	schema := `
+	CREATE TABLE IF NOT EXISTS document_revisions (
+	 id BIGSERIAL PRIMARY KEY, document_id BIGINT NOT NULL,
+	 snapshot JSONB NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+	);
+	CREATE TABLE IF NOT EXISTS document_notes (
+	 id BIGSERIAL PRIMARY KEY, document_id BIGINT NOT NULL,
+	 user_id BIGINT NOT NULL, quote TEXT NOT NULL, note TEXT NOT NULL,
+	 created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+	);
 	CREATE TABLE IF NOT EXISTS documents (
 		id             BIGSERIAL PRIMARY KEY,
 		title          TEXT NOT NULL,
@@ -550,6 +561,7 @@ func requireRole(role string, next http.HandlerFunc) http.HandlerFunc {
 // ---------------------------------------------------------------------------
 
 func render(w http.ResponseWriter, r *http.Request, page string, data PageData) {
+	data.DevReload = os.Getenv("DEV_RELOAD") == "1"
 	if data.User == nil {
 		data.User = sessionUser(r)
 	}
@@ -564,6 +576,22 @@ func render(w http.ResponseWriter, r *http.Request, page string, data PageData) 
 	if err := t.ExecuteTemplate(w, "base", data); err != nil {
 		log.Println("render:", err)
 	}
+}
+
+func devVersionHandler(w http.ResponseWriter, r *http.Request) {
+	if os.Getenv("DEV_RELOAD") != "1" {
+		http.NotFound(w, r)
+		return
+	}
+	paths := []string{"templates/base.html", "templates/document.html", "static/css/style.css", "static/css/reader.css", "static/js/reader.js"}
+	var newest int64
+	for _, path := range paths {
+		if info, err := os.Stat(path); err == nil && info.ModTime().UnixNano() > newest {
+			newest = info.ModTime().UnixNano()
+		}
+	}
+	w.Header().Set("Cache-Control", "no-store")
+	fmt.Fprintf(w, "%d", newest)
 }
 
 // ---------------------------------------------------------------------------
@@ -628,13 +656,26 @@ func editGetHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func editPostHandler(w http.ResponseWriter, r *http.Request) {
+	if !sameOrigin(w, r) {
+		return
+	}
 	id := r.PathValue("id")
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
 	bodyHTML := r.FormValue("body_html")
-	_, err := db.Exec(`
+	tx, err := db.Begin()
+	if err != nil {
+		http.Error(w, "Database error", 500)
+		return
+	}
+	defer tx.Rollback()
+	if err = snapshotDocument(tx, id); err != nil {
+		http.Error(w, "Document unavailable", 404)
+		return
+	}
+	_, err = tx.Exec(`
 		UPDATE documents SET
 			title          = $1,
 			title_np       = $2,
@@ -669,6 +710,10 @@ func editPostHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("editPost:", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	if err = tx.Commit(); err != nil {
+		http.Error(w, "Database error", 500)
 		return
 	}
 	http.Redirect(w, r, "/document/"+id, http.StatusSeeOther)
@@ -851,6 +896,156 @@ func dashboardHandler(w http.ResponseWriter, r *http.Request) {
 // Main
 // ---------------------------------------------------------------------------
 
+func sameOrigin(w http.ResponseWriter, r *http.Request) bool {
+	if r.Header.Get("Sec-Fetch-Site") == "cross-site" {
+		http.Error(w, "Forbidden", 403)
+		return false
+	}
+	origin := r.Header.Get("Origin")
+	if origin != "" && origin != "http://"+r.Host && origin != "https://"+r.Host {
+		http.Error(w, "Forbidden", 403)
+		return false
+	}
+	return true
+}
+
+func snapshotDocument(tx *sql.Tx, id string) error {
+	var snapshot []byte
+	if err := tx.QueryRow(`SELECT to_jsonb(d) FROM documents d WHERE id=$1 FOR UPDATE`, id).Scan(&snapshot); err != nil {
+		return err
+	}
+	_, err := tx.Exec(`INSERT INTO document_revisions(document_id,snapshot) VALUES($1,$2::jsonb)`, id, string(snapshot))
+	return err
+}
+
+func notesHandler(w http.ResponseWriter, r *http.Request) {
+	u := sessionUser(r)
+	id := r.PathValue("id")
+	w.Header().Set("Cache-Control", "no-store")
+	if r.Method != "GET" && !sameOrigin(w, r) {
+		return
+	}
+	if getDocumentByID(id) == nil {
+		http.NotFound(w, r)
+		return
+	}
+	switch r.Method {
+	case "POST":
+		var n struct {
+			Quote string `json:"quote"`
+			Note  string `json:"note"`
+		}
+		r.Body = http.MaxBytesReader(w, r.Body, 20000)
+		if json.NewDecoder(r.Body).Decode(&n) != nil || strings.TrimSpace(n.Quote) == "" || len(n.Quote) > 10000 || len(n.Note) > 5000 {
+			http.Error(w, "Select a shorter passage and note", 400)
+			return
+		}
+		_, err := db.Exec(`INSERT INTO document_notes(document_id,user_id,quote,note) VALUES($1,$2,$3,$4)`, id, u.ID, n.Quote, n.Note)
+		if err != nil {
+			http.Error(w, "Could not save note", 500)
+			return
+		}
+		w.WriteHeader(201)
+	case "DELETE":
+		_, err := db.Exec(`DELETE FROM document_notes WHERE id=$1 AND document_id=$2 AND user_id=$3`, r.PathValue("note"), id, u.ID)
+		if err != nil {
+			http.Error(w, "Could not remove note", 500)
+			return
+		}
+		w.WriteHeader(204)
+	default:
+		rows, err := db.Query(`SELECT id,quote,note FROM document_notes WHERE document_id=$1 AND user_id=$2 ORDER BY id`, id, u.ID)
+		if err != nil {
+			http.Error(w, "Could not load notes", 500)
+			return
+		}
+		defer rows.Close()
+		type note struct {
+			ID    int    `json:"id"`
+			Quote string `json:"quote"`
+			Note  string `json:"note"`
+		}
+		result := []note{}
+		for rows.Next() {
+			var n note
+			if rows.Scan(&n.ID, &n.Quote, &n.Note) != nil {
+				http.Error(w, "Database error", 500)
+				return
+			}
+			result = append(result, n)
+		}
+		if rows.Err() != nil {
+			http.Error(w, "Database error", 500)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(result)
+	}
+}
+
+func revisionsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	id := r.PathValue("id")
+	if r.Method == "POST" {
+		if !sameOrigin(w, r) {
+			return
+		}
+		tx, err := db.Begin()
+		if err != nil {
+			http.Error(w, "Database error", 500)
+			return
+		}
+		defer tx.Rollback()
+		if snapshotDocument(tx, id) != nil {
+			http.NotFound(w, r)
+			return
+		}
+		result, err := tx.Exec(`UPDATE documents d SET title=s.title,title_np=s.title_np,category=s.category,description=s.description,body_html=s.body_html,body_text=s.body_text,lang=s.lang,script=s.script,orig_author=s.orig_author,orig_author_np=s.orig_author_np,orig_year=s.orig_year,orig_month=s.orig_month,orig_day=s.orig_day FROM document_revisions r CROSS JOIN LATERAL jsonb_populate_record(NULL::documents,r.snapshot) s WHERE r.id=$1 AND r.document_id=$2 AND d.id=r.document_id`, r.PathValue("revision"), id)
+		if err != nil {
+			http.Error(w, "Could not restore revision", 500)
+			return
+		}
+		n, _ := result.RowsAffected()
+		if n != 1 {
+			http.NotFound(w, r)
+			return
+		}
+		if tx.Commit() != nil {
+			http.Error(w, "Could not restore revision", 500)
+			return
+		}
+		w.WriteHeader(204)
+		return
+	}
+	rows, err := db.Query(`SELECT id,created_at::text,snapshot->>'title',snapshot->>'body_text' FROM document_revisions WHERE document_id=$1 ORDER BY id DESC`, id)
+	if err != nil {
+		http.Error(w, "Could not load history", 500)
+		return
+	}
+	defer rows.Close()
+	type revision struct {
+		ID    int    `json:"id"`
+		Date  string `json:"date"`
+		Title string `json:"title"`
+		Text  string `json:"text"`
+	}
+	result := []revision{}
+	for rows.Next() {
+		var v revision
+		if rows.Scan(&v.ID, &v.Date, &v.Title, &v.Text) != nil {
+			http.Error(w, "Database error", 500)
+			return
+		}
+		result = append(result, v)
+	}
+	if rows.Err() != nil {
+		http.Error(w, "Database error", 500)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
 func main() {
 	loadEnvFile(".env.local")
 	if err := initDB(os.Getenv("DATABASE_URL")); err != nil {
@@ -874,6 +1069,12 @@ func main() {
 	mux.HandleFunc("GET /excerpts", excerptsHandler)
 	mux.HandleFunc("GET /excerpts/{slug}", excerptHandler)
 	mux.HandleFunc("GET /document/{id}", documentHandler)
+	mux.HandleFunc("GET /__dev/version", devVersionHandler)
+	mux.HandleFunc("GET /document/{id}/notes", requireRole("viewer", notesHandler))
+	mux.HandleFunc("POST /document/{id}/notes", requireRole("viewer", notesHandler))
+	mux.HandleFunc("DELETE /document/{id}/notes/{note}", requireRole("viewer", notesHandler))
+	mux.HandleFunc("GET /document/{id}/revisions", requireRole("admin", revisionsHandler))
+	mux.HandleFunc("POST /document/{id}/revisions/{revision}", requireRole("admin", revisionsHandler))
 	mux.HandleFunc("GET /mission", missionHandler)
 	mux.HandleFunc("GET /similar", similarHandler)
 	mux.HandleFunc("GET /store", storeHandler)

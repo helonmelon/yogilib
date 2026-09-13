@@ -2,6 +2,12 @@
 
 All notable changes to Yogilib Web are documented here.
 
+## 2026-09-13
+
+- Polished document reader typography, title hierarchy, section colors, spacing, and responsive layout.
+- Added table of contents, in-document search, passage links, reading settings, and original/transcription view.
+- Added private reader notes, admin revision history/restore, and opt-in development browser reload via `DEV_RELOAD=1`.
+
 ---
 
 ## [Unreleased] — Session: 2026-04-01

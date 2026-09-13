@@ -107,3 +107,6 @@ All Devanagari text (Nepali + Sanskrit) renders correctly in the Quill editor bo
 - Document list with category filter tabs
 - Search bar (passes `?q=` query param to server)
 - Category tabs include: सबै किताब कागजात रेकर्ड पत्रिका **अंश** अन्य
+# Document reading pages
+
+Document pages use the forest-green and warm-orange palette with a larger semantic title hierarchy, comfortable reading width, generous line spacing, and consistent dark section headings. Document-specific rules live in `static/css/reader.css` over the shared stylesheet.
