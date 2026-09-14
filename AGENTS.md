@@ -12,6 +12,7 @@ Yogilib is a Go web app for the works of Yogi Narharinath. Read README.md and th
 
 ## Continuing across devices
 
+- Read [the current setup handoff](docs/08-project-handoff.md) first when starting a fresh task or continuing device setup. It preserves the user's goal, reported progress, and remaining checks independently of old chats.
 - Follow docs/07-cross-device-work.md. Prefer continuing the same task on the same connected host when possible.
 - Before syncing code, check the current branch, uncommitted changes, and current remote state. Preserve changes from other devices. Never force-push or reset work to resolve an ordinary sync issue.
 - When handing work over, report the branch and commit, changes made, checks run, and what remains. Say explicitly if changes have not been pushed.

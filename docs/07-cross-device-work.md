@@ -1,5 +1,7 @@
 # Work on Yogilib from your phone and computers
 
+For the latest reported progress and the next unfinished step, read [the project handoff](08-project-handoff.md). The steps below are setup instructions, not proof that all devices are connected.
+
 Use this laptop as Yogilib's main working computer first. Connect your phone and other computer through Remote, then open the same Yogilib task to continue. This keeps the project, uploaded files, and existing setup together on the laptop while you give instructions from another device.
 
 ## Connect your phone
@@ -29,7 +31,7 @@ Checked September 14, 2026:
 - The laptop project is `/Users/kafle/Desktop/yogilib`, connected to `git@github.com:helonmelon/yogilib.git`.
 - Before this guide was added, the laptop was clean at `2dd8a99`, one commit ahead of the verified GitHub main branch at `af6f572`. That update was not on GitHub. This guide does not itself push changes.
 - The project uses Neon Postgres. Uploaded files remain local under `static/docs` and are ignored by Git. Using the same connected laptop retains access to those files; cloning the repository alone does not.
-- Phone pairing, access from the other computer, and account eligibility have not been verified.
+- The user subsequently reported completing phone pairing and opening the setup task through Remote. Phone execution and access from the other computer still need verification; see the project handoff.
 - Fly hosting files exist, but still reference the old SQLite setup. They do not establish that a working site is deployed. No deployment was performed.
 
 ## Reference
