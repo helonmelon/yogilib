@@ -16,7 +16,9 @@ go build -o yogilib .   # production binary
 PORT=9000 ./yogilib     # custom port
 ```
 
-Requires **Go 1.22+** and a `DATABASE_URL`. The app automatically reads `.env.local` when present; Neon writes that file during `neon link`, `neon checkout`, and `neon deploy`.
+Requires **Go 1.25+** and a `DATABASE_URL`. The app automatically reads `.env.local` when present; Neon writes that file during `neon link`, `neon checkout`, and `neon deploy`.
+
+To request changes from your phone and continue on another computer, start with the [cross-device guide](docs/07-cross-device-work.md).
 
 On a second computer:
 
