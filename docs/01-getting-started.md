@@ -11,7 +11,7 @@
 
 ```bash
 # Development — live template reloads on every request
-go run main.go
+go run .
 
 # Build a production binary
 go build -o yogilib .
@@ -24,7 +24,7 @@ PORT=9000 ./yogilib
 
 ```
 
-The server starts at **http://localhost:8080**. It requires `DATABASE_URL`; the app reads `.env.local` automatically when that file exists. Use `DEV_RELOAD=1 go run main.go` for browser auto-reload while editing templates, reader styles, or reader scripts; ordinary runs do not poll for changes.
+The server starts at **http://localhost:8080**. It requires `DATABASE_URL`; the app reads `.env.local` automatically when that file exists. Use `DEV_RELOAD=1 go run .` for browser auto-reload while editing templates, reader styles, or reader scripts; ordinary runs do not poll for changes.
 
 On Windows PowerShell, use `$env:PORT="9000"` before running the binary. To pull the Neon connection string on a new machine, run:
 

@@ -1,25 +1,38 @@
 {{define "base"}}<!DOCTYPE html>
-<html lang="en">
+<html lang="{{uiLanguage}}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{.Title}} — Yogilib</title>
+  <title>{{if .Doc}}{{if eq .Title .Doc.Title}}{{.Title}}{{else}}{{t "सम्पादन"}}: {{.Doc.Title}}{{end}}{{else if .Exc}}{{.Title}}{{else}}{{t .Title}}{{end}} — Yogilib</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Labrada:ital,wght@0,400;0,600;1,400&family=Hind:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
+  <script>window.yogilibMessages = {{uiMessages}}; window.yogilibT = key => window.yogilibMessages[key] || key;</script>
+  <script src="/static/js/interface.js" defer></script>
   {{if .DevReload}}<script src="/static/js/dev-reload.js" defer></script>{{end}}
 </head>
 <body>
+  <div class="language-bar">
+    <form action="/language" method="POST" id="language-form" class="language-form">
+      <label for="interface-language">{{t "Interface language"}}</label>
+      <input type="hidden" name="return_to" value="{{.ReturnTo}}">
+      <select id="interface-language" name="language">
+        <option value="en" lang="en" {{if eq uiLanguage "en"}}selected{{end}}>English</option>
+        <option value="ne" lang="ne" {{if eq uiLanguage "ne"}}selected{{end}}>नेपाली</option>
+      </select>
+      <button type="submit">{{t "Apply"}}</button>
+    </form>
+  </div>
 
   {{/* Admin bar — shown only when user is logged in. */}}
   {{if .User}}
   <div class="admin-bar">
-    <span>{{.User.Email}}</span>
-    <a href="/dashboard">ड्यासबोर्ड</a>
-    <a href="/upload">अपलोड</a>
+    <span class="account-identity">{{t "Signed in as"}} <strong>{{.User.Email}}</strong></span>
+    {{if eq .User.Role "admin"}}<a href="/dashboard">{{t "ड्यासबोर्ड"}}</a>{{end}}
+    {{if or (eq .User.Role "admin") (eq .User.Role "uploader")}}<a href="/upload">{{t "अपलोड"}}</a>{{end}}
     <form class="admin-bar-form" method="POST" action="/logout">
-      <button class="admin-bar-button" type="submit">बाहिर</button>
+      <button class="admin-bar-button" type="submit">{{t "बाहिर"}}</button>
     </form>
   </div>
   {{end}}
@@ -31,9 +44,9 @@
     </header>
 
     <nav class="site-nav">
-      <a href="/about">बारेमा</a>
-      <a href="/works">ग्रन्थावली</a>
-      <a href="/upload" class="contribute">योगदान</a>
+      <a href="/about">{{t "बारेमा"}}</a>
+      <a href="/works">{{t "ग्रन्थावली"}}</a>
+      <a href="/upload" class="contribute">{{t "योगदान"}}</a>
     </nav>
 
     <main>

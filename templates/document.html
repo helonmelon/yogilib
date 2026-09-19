@@ -6,12 +6,12 @@
   <div class="doc-viewer-header">
     <!-- Category + upload date + edit link -->
     <div class="doc-meta doc-viewer-meta">
-      {{if .Doc.Category}}<span class="tag">{{.Doc.Category}}</span>{{end}}
+      {{if .Doc.Category}}<span class="tag">{{t .Doc.Category}}</span>{{end}}
       {{if .Doc.Lang}}<span class="tag tag-lang">{{.Doc.Lang}}</span>{{end}}
       {{if .Doc.Script}}<span class="tag tag-script">{{.Doc.Script}}</span>{{end}}
-      <span class="doc-added-date">थपिएको: {{.Doc.CreatedAt}}</span>
+      <span class="doc-added-date">{{t "थपिएको:"}} {{.Doc.CreatedAt}}</span>
       {{if .User}}{{if eq .User.Role "admin"}}
-      <a class="doc-edit-button" href="/document/{{.Doc.ID}}/edit">सम्पादन</a>
+      <a class="doc-edit-button" href="/document/{{.Doc.ID}}/edit">{{t "सम्पादन"}}</a>
       {{end}}{{end}}
     </div>
 
@@ -43,17 +43,17 @@
     {{if .Doc.Description}}<p class="doc-description">{{.Doc.Description}}</p>{{end}}
   </div>
 
-  <section class="reader-tools" aria-label="Reading tools">
-    <details><summary>Reading settings · पढ्ने सुविधा</summary>
-      <label>Font size <input id="reader-size" type="range" min="16" max="36" value="20"></label>
-      <label>Line spacing <input id="reader-spacing" type="range" min="1.4" max="2.6" step="0.1" value="1.9"></label>
-      <label>Page width <select id="reader-width"><option value="640px">Narrow</option><option value="800px" selected>Comfortable</option><option value="100%">Wide</option></select></label>
+  <section class="reader-tools" aria-label="{{t "Reading tools"}}">
+    <details><summary>{{t "Reading settings · पढ्ने सुविधा"}}</summary>
+      <label>{{t "Font size"}} <input id="reader-size" type="range" min="16" max="36" value="20"></label>
+      <label>{{t "Line spacing"}} <input id="reader-spacing" type="range" min="1.4" max="2.6" step="0.1" value="1.9"></label>
+      <label>{{t "Page width"}} <select id="reader-width"><option value="640px">{{t "Narrow"}}</option><option value="800px" selected>{{t "Comfortable"}}</option><option value="100%">{{t "Wide"}}</option></select></label>
     </details>
-    <form id="reader-search" role="search"><label>Find in document <input id="reader-query" type="search" maxlength="200"></label><button>Find</button><button type="button" id="search-prev" aria-label="Previous match">↑</button><button type="button" id="search-next" aria-label="Next match">↓</button><output id="search-count" aria-live="polite"></output></form>
-    {{if .Doc.FilePath}}<button id="reader-split" type="button" aria-pressed="false">Original + transcription</button>{{end}}
+    <form id="reader-search" role="search"><label>{{t "Find in document"}} <input id="reader-query" type="search" maxlength="200"></label><button>{{t "Find"}}</button><button type="button" id="search-prev" aria-label="{{t "Previous match"}}">↑</button><button type="button" id="search-next" aria-label="{{t "Next match"}}">↓</button><output id="search-count" aria-live="polite"></output></form>
+    {{if .Doc.FilePath}}<button id="reader-split" type="button" aria-pressed="false">{{t "Original + transcription"}}</button>{{end}}
   </section>
   <div id="reader-status" role="status" aria-live="polite"></div>
-  <nav id="reader-toc" aria-label="Table of contents"></nav>
+  <nav id="reader-toc" aria-label="{{t "Table of contents"}}"></nav>
   <div class="reader-columns">
   {{if .Doc.BodyHTML}}
   <article class="doc-body" id="reader-body">
@@ -64,29 +64,29 @@
   <!-- Attached file -->
   {{if .Doc.FilePath}}
   <div class="doc-attachment" id="reader-original" data-file="{{.Doc.FilePath}}">
-    <a href="{{.Doc.FilePath}}" target="_blank" rel="noopener">Open / download original ↗</a>
+    <a href="{{.Doc.FilePath}}" target="_blank" rel="noopener">{{t "Open / download original ↗"}}</a>
     <object class="pdf-embed" data="{{.Doc.FilePath}}" type="application/pdf">
-      <p>तपाईंको ब्राउजरले यो फाइल प्रदर्शन गर्न सक्दैन।
-      <a href="{{.Doc.FilePath}}">डाउनलोड गर्नुहोस् →</a></p>
+      <p>{{t "तपाईंको ब्राउजरले यो फाइल प्रदर्शन गर्न सक्दैन।"}}
+      <a href="{{.Doc.FilePath}}">{{t "डाउनलोड गर्नुहोस् →"}}</a></p>
     </object>
   </div>
   {{else if not .Doc.BodyHTML}}
   <p class="empty-state empty-state-spacious">
-    अहिलेसम्म कुनै फाइल थपिएको छैन।
+    {{t "अहिलेसम्म कुनै फाइल थपिएको छैन।"}}
   </p>
   {{end}}
   </div>
-  <section class="reader-notes"><h2>Highlights &amp; private notes</h2>
-  {{if .User}}<p>Select a passage in the text, then save a highlight or add a note. Notes are private to your account.</p>
-  <button type="button" id="capture-selection">Use selected passage</button><blockquote id="selected-quote"></blockquote>
-  <label>Note <textarea id="reader-note" maxlength="5000" rows="3"></textarea></label><button type="button" id="save-note">Save highlight / note</button>
+  <section class="reader-notes"><h2>{{t "Highlights & private notes"}}</h2>
+  {{if .User}}<p>{{t "Select a passage in the text, then save a highlight or add a note. Notes are private to your account."}}</p>
+  <button type="button" id="capture-selection">{{t "Use selected passage"}}</button><blockquote id="selected-quote"></blockquote>
+  <label>{{t "Note"}} <textarea id="reader-note" maxlength="5000" rows="3"></textarea></label><button type="button" id="save-note">{{t "Save highlight / note"}}</button>
   <div id="notes-list"></div>
-  {{else}}<p><a href="/login">Sign in</a> to save private highlights and notes.</p>{{end}}
+  {{else}}<p><a href="/login">{{t "Sign in"}}</a> {{t "to save private highlights and notes."}}</p>{{end}}
   </section>
-  {{if .User}}{{if eq .User.Role "admin"}}<details id="reader-history"><summary>Revision history</summary><p>History begins with edits made after this feature was added. Restoring also saves the current version.</p><div id="history-list"></div></details>{{end}}{{end}}
+  {{if .User}}{{if eq .User.Role "admin"}}<details id="reader-history"><summary>{{t "Revision history"}}</summary><p>{{t "History begins with edits made after this feature was added. Restoring also saves the current version."}}</p><div id="history-list"></div></details>{{end}}{{end}}
 
   {{else}}
-  <p class="empty-state empty-state-spacious">कागजात भेटिएन।</p>
+  <p class="empty-state empty-state-spacious">{{t "कागजात भेटिएन।"}}</p>
   {{end}}
 </div>
 <script src="/static/js/reader.js" defer></script>

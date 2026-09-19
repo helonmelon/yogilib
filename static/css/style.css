@@ -1014,3 +1014,25 @@ footer {
     height: 65vh;
   }
 }
+
+/* Interface language is independent of the language of archive material. */
+.language-bar { padding: .55rem 1rem; background: #f4f1e8; border-bottom: 1px solid #ded8ca; }
+.language-form { display: flex; align-items: center; justify-content: flex-end; gap: .6rem; flex-wrap: wrap; max-width: 1100px; margin: auto; font-size: .9rem; }
+.language-form select, .language-form button { font: inherit; min-height: 36px; padding: .3rem .65rem; border: 1px solid #8a9485; border-radius: 4px; background: #fff; color: #263d2b; }
+.language-form button { cursor: pointer; }
+.language-form :focus-visible { outline: 2px solid #305b3b; outline-offset: 3px; }
+.admin-bar { flex-wrap: wrap; gap: .65rem 1.25rem; }
+.account-identity { overflow-wrap: anywhere; }
+html[lang="ne"] .language-form, html[lang="ne"] .admin-bar { font-family: 'Hind', sans-serif; }
+html[lang="ne"] .ql-snow .ql-picker.ql-header .ql-picker-label::before,
+html[lang="ne"] .ql-snow .ql-picker.ql-header .ql-picker-item::before { content: 'सामान्य'; }
+html[lang="ne"] .ql-snow .ql-picker.ql-header [data-value]::before { content: 'शीर्षक ' attr(data-value); }
+html[lang="ne"] .ql-snow .ql-picker.ql-size .ql-picker-label::before,
+html[lang="ne"] .ql-snow .ql-picker.ql-size .ql-picker-item::before { content: 'सामान्य'; }
+html[lang="ne"] .ql-snow .ql-picker.ql-size [data-value="small"]::before { content: 'सानो'; }
+html[lang="ne"] .ql-snow .ql-picker.ql-size [data-value="large"]::before { content: 'ठूलो'; }
+html[lang="ne"] .ql-snow .ql-picker.ql-size [data-value="huge"]::before { content: 'धेरै ठूलो'; }
+html[lang="ne"] .ql-snow .ql-tooltip::before { content: 'लिङ्क:'; }
+html[lang="ne"] .ql-snow .ql-tooltip a.ql-action::after { content: 'सम्पादन'; }
+html[lang="ne"] .ql-snow .ql-tooltip.ql-editing a.ql-action::after { content: 'सुरक्षित गर्नुहोस्'; }
+html[lang="ne"] .ql-snow .ql-tooltip a.ql-remove::before { content: 'हटाउनुहोस्'; }

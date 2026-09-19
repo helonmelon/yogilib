@@ -1,5 +1,5 @@
 // yogilib — Go HTTP server
-// Run:   go run main.go
+// Run:   go run .
 // Build: go build -o yogilib .
 package main
 
@@ -83,6 +83,7 @@ type PageData struct {
 	StoreItems []StoreItem
 	User       *User // nil when not logged in
 	DevReload  bool
+	ReturnTo   string
 }
 
 // ---------------------------------------------------------------------------
@@ -549,7 +550,7 @@ func requireRole(role string, next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		if !hasRole(u.Role, role) {
-			http.Error(w, "Forbidden", http.StatusForbidden)
+			http.Error(w, translateUI(interfaceLanguage(r), "Forbidden"), http.StatusForbidden)
 			return
 		}
 		next(w, r)
@@ -561,11 +562,12 @@ func requireRole(role string, next http.HandlerFunc) http.HandlerFunc {
 // ---------------------------------------------------------------------------
 
 func render(w http.ResponseWriter, r *http.Request, page string, data PageData) {
+	data.ReturnTo = r.URL.RequestURI()
 	data.DevReload = os.Getenv("DEV_RELOAD") == "1"
 	if data.User == nil {
 		data.User = sessionUser(r)
 	}
-	t, err := template.ParseFiles(
+	t, err := localizedTemplate(interfaceLanguage(r),
 		"templates/base.html",
 		"templates/"+page+".html",
 	)
@@ -661,18 +663,18 @@ func editPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	id := r.PathValue("id")
 	if err := r.ParseForm(); err != nil {
-		http.Error(w, "Bad request", http.StatusBadRequest)
+		http.Error(w, translateUI(interfaceLanguage(r), "Bad request"), http.StatusBadRequest)
 		return
 	}
 	bodyHTML := r.FormValue("body_html")
 	tx, err := db.Begin()
 	if err != nil {
-		http.Error(w, "Database error", 500)
+		http.Error(w, translateUI(interfaceLanguage(r), "Database error"), 500)
 		return
 	}
 	defer tx.Rollback()
 	if err = snapshotDocument(tx, id); err != nil {
-		http.Error(w, "Document unavailable", 404)
+		http.Error(w, translateUI(interfaceLanguage(r), "Document unavailable"), 404)
 		return
 	}
 	_, err = tx.Exec(`
@@ -709,11 +711,11 @@ func editPostHandler(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		log.Println("editPost:", err)
-		http.Error(w, "Database error", http.StatusInternalServerError)
+		http.Error(w, translateUI(interfaceLanguage(r), "Database error"), http.StatusInternalServerError)
 		return
 	}
 	if err = tx.Commit(); err != nil {
-		http.Error(w, "Database error", 500)
+		http.Error(w, translateUI(interfaceLanguage(r), "Database error"), 500)
 		return
 	}
 	http.Redirect(w, r, "/document/"+id, http.StatusSeeOther)
@@ -726,7 +728,7 @@ func uploadGetHandler(w http.ResponseWriter, r *http.Request) {
 func uploadPostHandler(w http.ResponseWriter, r *http.Request) {
 	const maxUploadSize = 50 << 20 // 50 MB
 	if err := r.ParseMultipartForm(maxUploadSize); err != nil {
-		http.Error(w, "Bad request", http.StatusBadRequest)
+		http.Error(w, translateUI(interfaceLanguage(r), "Bad request"), http.StatusBadRequest)
 		return
 	}
 
@@ -745,7 +747,7 @@ func uploadPostHandler(w http.ResponseWriter, r *http.Request) {
 		// Ensure upload directory exists
 		if err := os.MkdirAll("static/docs", 0755); err != nil {
 			log.Println("mkdir static/docs:", err)
-			http.Error(w, "Server error", http.StatusInternalServerError)
+			http.Error(w, translateUI(interfaceLanguage(r), "Server error"), http.StatusInternalServerError)
 			return
 		}
 
@@ -757,14 +759,14 @@ func uploadPostHandler(w http.ResponseWriter, r *http.Request) {
 		out, err := os.Create(dst)
 		if err != nil {
 			log.Println("create file:", err)
-			http.Error(w, "Server error", http.StatusInternalServerError)
+			http.Error(w, translateUI(interfaceLanguage(r), "Server error"), http.StatusInternalServerError)
 			return
 		}
 		defer out.Close()
 
 		if _, err := io.Copy(out, file); err != nil {
 			log.Println("copy file:", err)
-			http.Error(w, "Server error", http.StatusInternalServerError)
+			http.Error(w, translateUI(interfaceLanguage(r), "Server error"), http.StatusInternalServerError)
 			return
 		}
 		filePath = "/static/docs/" + safeName
@@ -818,7 +820,7 @@ func uploadPostHandler(w http.ResponseWriter, r *http.Request) {
 	).Scan(&id)
 	if err != nil {
 		log.Println("uploadPost:", err)
-		http.Error(w, "Database error", http.StatusInternalServerError)
+		http.Error(w, translateUI(interfaceLanguage(r), "Database error"), http.StatusInternalServerError)
 		return
 	}
 
@@ -847,7 +849,7 @@ func loginGetHandler(w http.ResponseWriter, r *http.Request) {
 
 func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
-		http.Error(w, "Bad request", http.StatusBadRequest)
+		http.Error(w, translateUI(interfaceLanguage(r), "Bad request"), http.StatusBadRequest)
 		return
 	}
 	email := strings.TrimSpace(r.FormValue("email"))
@@ -865,7 +867,7 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	token, err := createSession(u.ID)
 	if err != nil {
-		http.Error(w, "Session error", http.StatusInternalServerError)
+		http.Error(w, translateUI(interfaceLanguage(r), "Session error"), http.StatusInternalServerError)
 		return
 	}
 	setSessionCookie(w, token)
@@ -898,12 +900,12 @@ func dashboardHandler(w http.ResponseWriter, r *http.Request) {
 
 func sameOrigin(w http.ResponseWriter, r *http.Request) bool {
 	if r.Header.Get("Sec-Fetch-Site") == "cross-site" {
-		http.Error(w, "Forbidden", 403)
+		http.Error(w, translateUI(interfaceLanguage(r), "Forbidden"), 403)
 		return false
 	}
 	origin := r.Header.Get("Origin")
 	if origin != "" && origin != "http://"+r.Host && origin != "https://"+r.Host {
-		http.Error(w, "Forbidden", 403)
+		http.Error(w, translateUI(interfaceLanguage(r), "Forbidden"), 403)
 		return false
 	}
 	return true
@@ -937,26 +939,26 @@ func notesHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		r.Body = http.MaxBytesReader(w, r.Body, 20000)
 		if json.NewDecoder(r.Body).Decode(&n) != nil || strings.TrimSpace(n.Quote) == "" || len(n.Quote) > 10000 || len(n.Note) > 5000 {
-			http.Error(w, "Select a shorter passage and note", 400)
+			http.Error(w, translateUI(interfaceLanguage(r), "Select a shorter passage and note"), 400)
 			return
 		}
 		_, err := db.Exec(`INSERT INTO document_notes(document_id,user_id,quote,note) VALUES($1,$2,$3,$4)`, id, u.ID, n.Quote, n.Note)
 		if err != nil {
-			http.Error(w, "Could not save note", 500)
+			http.Error(w, translateUI(interfaceLanguage(r), "Could not save note"), 500)
 			return
 		}
 		w.WriteHeader(201)
 	case "DELETE":
 		_, err := db.Exec(`DELETE FROM document_notes WHERE id=$1 AND document_id=$2 AND user_id=$3`, r.PathValue("note"), id, u.ID)
 		if err != nil {
-			http.Error(w, "Could not remove note", 500)
+			http.Error(w, translateUI(interfaceLanguage(r), "Could not remove note"), 500)
 			return
 		}
 		w.WriteHeader(204)
 	default:
 		rows, err := db.Query(`SELECT id,quote,note FROM document_notes WHERE document_id=$1 AND user_id=$2 ORDER BY id`, id, u.ID)
 		if err != nil {
-			http.Error(w, "Could not load notes", 500)
+			http.Error(w, translateUI(interfaceLanguage(r), "Could not load notes"), 500)
 			return
 		}
 		defer rows.Close()
@@ -969,13 +971,13 @@ func notesHandler(w http.ResponseWriter, r *http.Request) {
 		for rows.Next() {
 			var n note
 			if rows.Scan(&n.ID, &n.Quote, &n.Note) != nil {
-				http.Error(w, "Database error", 500)
+				http.Error(w, translateUI(interfaceLanguage(r), "Database error"), 500)
 				return
 			}
 			result = append(result, n)
 		}
 		if rows.Err() != nil {
-			http.Error(w, "Database error", 500)
+			http.Error(w, translateUI(interfaceLanguage(r), "Database error"), 500)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -992,7 +994,7 @@ func revisionsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		tx, err := db.Begin()
 		if err != nil {
-			http.Error(w, "Database error", 500)
+			http.Error(w, translateUI(interfaceLanguage(r), "Database error"), 500)
 			return
 		}
 		defer tx.Rollback()
@@ -1002,7 +1004,7 @@ func revisionsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		result, err := tx.Exec(`UPDATE documents d SET title=s.title,title_np=s.title_np,category=s.category,description=s.description,body_html=s.body_html,body_text=s.body_text,lang=s.lang,script=s.script,orig_author=s.orig_author,orig_author_np=s.orig_author_np,orig_year=s.orig_year,orig_month=s.orig_month,orig_day=s.orig_day FROM document_revisions r CROSS JOIN LATERAL jsonb_populate_record(NULL::documents,r.snapshot) s WHERE r.id=$1 AND r.document_id=$2 AND d.id=r.document_id`, r.PathValue("revision"), id)
 		if err != nil {
-			http.Error(w, "Could not restore revision", 500)
+			http.Error(w, translateUI(interfaceLanguage(r), "Could not restore revision"), 500)
 			return
 		}
 		n, _ := result.RowsAffected()
@@ -1011,7 +1013,7 @@ func revisionsHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if tx.Commit() != nil {
-			http.Error(w, "Could not restore revision", 500)
+			http.Error(w, translateUI(interfaceLanguage(r), "Could not restore revision"), 500)
 			return
 		}
 		w.WriteHeader(204)
@@ -1019,7 +1021,7 @@ func revisionsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	rows, err := db.Query(`SELECT id,created_at::text,snapshot->>'title',snapshot->>'body_text' FROM document_revisions WHERE document_id=$1 ORDER BY id DESC`, id)
 	if err != nil {
-		http.Error(w, "Could not load history", 500)
+		http.Error(w, translateUI(interfaceLanguage(r), "Could not load history"), 500)
 		return
 	}
 	defer rows.Close()
@@ -1033,13 +1035,13 @@ func revisionsHandler(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var v revision
 		if rows.Scan(&v.ID, &v.Date, &v.Title, &v.Text) != nil {
-			http.Error(w, "Database error", 500)
+			http.Error(w, translateUI(interfaceLanguage(r), "Database error"), 500)
 			return
 		}
 		result = append(result, v)
 	}
 	if rows.Err() != nil {
-		http.Error(w, "Database error", 500)
+		http.Error(w, translateUI(interfaceLanguage(r), "Database error"), 500)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -1059,6 +1061,7 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("POST /language", languageHandler)
 
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 

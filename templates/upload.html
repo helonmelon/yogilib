@@ -378,14 +378,14 @@
 </style>
 
 <div class="contribute-page">
-  <h1>योगदान गर्नुहोस्</h1>
-  <p class="subtitle">Contribute a document, book, record, or article to the Yogilib archive.</p>
+  <h1>{{t "योगदान गर्नुहोस्"}}</h1>
+  <p class="subtitle">{{t "Contribute a document, book, record, or article to the Yogilib archive."}}</p>
 
   {{if .Flash}}
-  <div class="flash flash-ok">{{.Flash}}</div>
+  <div class="flash flash-ok">{{t .Flash}}</div>
   {{end}}
   {{if .Error}}
-  <div class="flash flash-err">{{.Error}}</div>
+  <div class="flash flash-err">{{t .Error}}</div>
   {{end}}
 
   <form id="upload-form" class="editor-card" method="POST" action="/upload" enctype="multipart/form-data">
@@ -396,61 +396,61 @@
     <!-- ── Titles ──────────────────────────────────────────── -->
     <div class="fg-row">
       <div class="fg">
-        <label for="title">Title (English)</label>
+        <label for="title">{{t "Title (English)"}}</label>
         <input type="text" id="title" name="title" required
-               placeholder="e.g. Treaty of Sugowlee, 1815">
+               placeholder="{{t "e.g. Treaty of Sugowlee, 1815"}}">
       </div>
       <div class="fg">
-        <label for="title_np">शीर्षक (नेपाली)</label>
+        <label for="title_np">{{t "शीर्षक (नेपाली)"}}</label>
         <div class="np-wrap">
           <input type="text" id="title_np" name="title_np"
                  placeholder="उदाहरण: सुगौली सन्धि">
           <div class="np-badge">
-            <button type="button" id="np-unicode-btn" class="active" title="Type in Unicode Nepali">युनि</button>
-            <button type="button" id="np-preeti-btn" title="Type in Preeti (auto-converts)">Preeti</button>
+            <button type="button" id="np-unicode-btn" class="active" title="{{t "Type in Unicode Nepali"}}">{{t "युनि"}}</button>
+            <button type="button" id="np-preeti-btn" title="{{t "Type in Preeti (auto-converts)"}}">{{t "Preeti"}}</button>
           </div>
         </div>
-        <div class="hint">Typing mode: <span id="np-mode-label">Unicode (direct)</span></div>
+        <div class="hint">{{t "Typing mode:"}} <span id="np-mode-label">{{t "Unicode (direct)"}}</span></div>
       </div>
     </div>
 
     <!-- ── Category ────────────────────────────────────────── -->
     <div class="fg">
-      <label for="category">वर्ग / Category</label>
+      <label for="category">{{t "वर्ग / Category"}}</label>
       <select id="category" name="category" required>
-        <option value="">— छान्नुहोस् / Select —</option>
-        <option value="किताब">किताब (Book)</option>
-        <option value="कागजात">कागजात (Document)</option>
-        <option value="रेकर्ड">रेकर्ड (Record)</option>
-        <option value="पत्रिका">पत्रिका (Journal)</option>
-        <option value="अंश">अंश (Excerpt)</option>
-        <option value="अन्य">अन्य (Other)</option>
+        <option value="">{{t "— छान्नुहोस् / Select —"}}</option>
+        <option value="किताब">{{t "किताब (Book)"}}</option>
+        <option value="कागजात">{{t "कागजात (Document)"}}</option>
+        <option value="रेकर्ड">{{t "रेकर्ड (Record)"}}</option>
+        <option value="पत्रिका">{{t "पत्रिका (Journal)"}}</option>
+        <option value="अंश">{{t "अंश (Excerpt)"}}</option>
+        <option value="अन्य">{{t "अन्य (Other)"}}</option>
       </select>
     </div>
 
     <!-- ── Language ───────────────────────────────────────── -->
     <div class="fg-row">
       <div class="fg">
-        <label for="doc_lang">भाषा / Language</label>
+        <label for="doc_lang">{{t "भाषा / Language"}}</label>
         <select id="doc_lang" name="doc_lang">
-          <option value="">— Select language —</option>
-          <option value="en">English</option>
-          <option value="ne">नेपाली (Nepali)</option>
-          <option value="sa">संस्कृत (Sanskrit)</option>
-          <option value="ne-sa">नेपाली + संस्कृत (Bilingual)</option>
-          <option value="mixed">Mixed / बहुभाषिक</option>
-          <option value="other">Other</option>
+          <option value="">{{t "— Select language —"}}</option>
+          <option value="en">{{t "English"}}</option>
+          <option value="ne">{{t "नेपाली (Nepali)"}}</option>
+          <option value="sa">{{t "संस्कृत (Sanskrit)"}}</option>
+          <option value="ne-sa">{{t "नेपाली + संस्कृत (Bilingual)"}}</option>
+          <option value="mixed">{{t "Mixed / बहुभाषिक"}}</option>
+          <option value="other">{{t "Other"}}</option>
         </select>
-        <div class="hint">The primary language of the original document.</div>
+        <div class="hint">{{t "The primary language of the original document."}}</div>
       </div>
       <div class="fg">
-        <label for="script">लिपि / Script</label>
+        <label for="script">{{t "लिपि / Script"}}</label>
         <select id="script" name="script">
-          <option value="">— Select script —</option>
-          <option value="devanagari">देवनागरी (Devanagari)</option>
-          <option value="latin">Latin / Roman</option>
-          <option value="iast">Latin IAST (romanized Sanskrit)</option>
-          <option value="mixed">Mixed scripts</option>
+          <option value="">{{t "— Select script —"}}</option>
+          <option value="devanagari">{{t "देवनागरी (Devanagari)"}}</option>
+          <option value="latin">{{t "Latin / Roman"}}</option>
+          <option value="iast">{{t "Latin IAST (romanized Sanskrit)"}}</option>
+          <option value="mixed">{{t "Mixed scripts"}}</option>
         </select>
       </div>
     </div>
@@ -458,89 +458,88 @@
     <!-- ── Original Date ──────────────────────────────────── -->
     <div class="auto-date-notice">
       <span class="adt-icon">🗓️</span>
-      <span><strong>Upload date</strong> is recorded automatically when you submit. Use the fields below for the document's <em>original</em> date.</span>
+      {{t "Upload date is recorded automatically. Enter the original document date below."}}
     </div>
     <div class="fg-row-3">
       <div class="fg">
-        <label for="orig_year">Original Year / मूल वर्ष</label>
-        <input type="text" id="orig_year" name="orig_year" placeholder="e.g. 1815 or १८७२">
+        <label for="orig_year">{{t "Original Year / मूल वर्ष"}}</label>
+        <input type="text" id="orig_year" name="orig_year" placeholder="{{t "e.g. 1815 or १८७२"}}">
       </div>
       <div class="fg">
-        <label for="orig_month">Month / महिना</label>
+        <label for="orig_month">{{t "Month / महिना"}}</label>
         <select id="orig_month" name="orig_month">
-          <option value="">— Month —</option>
-          <option value="01">January / जनवरी</option>
-          <option value="02">February / फेब्रुअरी</option>
-          <option value="03">March / मार्च</option>
-          <option value="04">April / अप्रिल</option>
-          <option value="05">May / मे</option>
-          <option value="06">June / जुन</option>
-          <option value="07">July / जुलाई</option>
-          <option value="08">August / अगस्ट</option>
-          <option value="09">September / सेप्टेम्बर</option>
-          <option value="10">October / अक्टोबर</option>
-          <option value="11">November / नोभेम्बर</option>
-          <option value="12">December / डिसेम्बर</option>
+          <option value="">{{t "— Month —"}}</option>
+          <option value="01">{{t "January / जनवरी"}}</option>
+          <option value="02">{{t "February / फेब्रुअरी"}}</option>
+          <option value="03">{{t "March / मार्च"}}</option>
+          <option value="04">{{t "April / अप्रिल"}}</option>
+          <option value="05">{{t "May / मे"}}</option>
+          <option value="06">{{t "June / जुन"}}</option>
+          <option value="07">{{t "July / जुलाई"}}</option>
+          <option value="08">{{t "August / अगस्ट"}}</option>
+          <option value="09">{{t "September / सेप्टेम्बर"}}</option>
+          <option value="10">{{t "October / अक्टोबर"}}</option>
+          <option value="11">{{t "November / नोभेम्बर"}}</option>
+          <option value="12">{{t "December / डिसेम्बर"}}</option>
         </select>
       </div>
       <div class="fg">
-        <label for="orig_day">Day / दिन</label>
-        <input type="number" id="orig_day" name="orig_day" min="1" max="31" placeholder="e.g. 2">
+        <label for="orig_day">{{t "Day / दिन"}}</label>
+        <input type="number" id="orig_day" name="orig_day" min="1" max="31" placeholder="{{t "e.g. 2"}}">
       </div>
     </div>
 
     <!-- ── Author ──────────────────────────────────────────── -->
     <div class="author-section">
-      <h4>✍️ Authorship / लेखक विवरण</h4>
+      <h4>{{t "✍️ Authorship / लेखक विवरण"}}</h4>
       <div class="fg-row">
         <div class="fg fg-tight">
-          <label for="orig_author">Original Author / मूल लेखक</label>
+          <label for="orig_author">{{t "Original Author / मूल लेखक"}}</label>
           <input type="text" id="orig_author" name="orig_author"
-                 placeholder="e.g. Yogi Narharinath / योगी नरहरिनाथ">
-          <div class="hint">Who originally wrote or compiled this document.</div>
+                 placeholder="{{t "e.g. Yogi Narharinath / योगी नरहरिनाथ"}}">
+          <div class="hint">{{t "Who originally wrote or compiled this document."}}</div>
         </div>
         <div class="fg fg-tight">
-          <label for="orig_author_np">Original Author (नेपाली)</label>
+          <label for="orig_author_np">{{t "Original Author (नेपाली)"}}</label>
           <div class="np-wrap">
             <input type="text" id="orig_author_np" name="orig_author_np"
                    placeholder="उदाहरण: योगी नरहरिनाथ">
             <div class="np-badge">
-              <button type="button" id="au-unicode-btn" class="active" title="Unicode">युनि</button>
-              <button type="button" id="au-preeti-btn" title="Preeti">Preeti</button>
+              <button type="button" id="au-unicode-btn" class="active" title="{{t "Unicode"}}">{{t "युनि"}}</button>
+              <button type="button" id="au-preeti-btn" title="{{t "Preeti"}}">{{t "Preeti"}}</button>
             </div>
           </div>
-          <div class="hint">Typing mode: <span id="au-mode-label">Unicode (direct)</span></div>
+          <div class="hint">{{t "Typing mode:"}} <span id="au-mode-label">{{t "Unicode (direct)"}}</span></div>
         </div>
       </div>
       <div class="uploader-note">
-        📌 <strong>Uploaded by:</strong> The account that submits this form will be automatically recorded as the contributor once user authentication is enabled.
-      </div>
+        {{t "Your signed-in account will be recorded as the contributor."}}</div>
     </div>
 
     <!-- ── Rich Text Editor ────────────────────────────────── -->
-    <div class="section-divider">Rich Text Content / सामग्री</div>
+    <div class="section-divider">{{t "Rich Text Content / सामग्री"}}</div>
 
     <div class="fg">
-      <div class="editor-label">Content Body</div>
+      <div class="editor-label">{{t "Content Body"}}</div>
 
       <!-- Language / mode bar -->
       <div class="editor-lang-bar">
-        <span>Language:</span>
-        <button type="button" id="lang-en" class="active" data-lang="en">English</button>
-        <button type="button" id="lang-ne" data-lang="ne">नेपाली</button>
-        <button type="button" id="lang-sa" data-lang="sa">संस्कृत (Sanskrit)</button>
-        <button type="button" id="lang-mixed" data-lang="mixed">Mixed</button>
+        <span>{{t "Language:"}}</span>
+        <button type="button" id="lang-en" class="active" data-lang="en">{{t "English"}}</button>
+        <button type="button" id="lang-ne" data-lang="ne">{{t "नेपाली"}}</button>
+        <button type="button" id="lang-sa" data-lang="sa">{{t "संस्कृत (Sanskrit)"}}</button>
+        <button type="button" id="lang-mixed" data-lang="mixed">{{t "Mixed"}}</button>
       </div>
 
       <!-- Quill editor tabs: Visual / Source -->
       <div class="editor-tabs">
-        <button type="button" id="tab-visual" class="active" onclick="switchTab('visual')">✏️ Visual Editor</button>
-        <button type="button" id="tab-source" onclick="switchTab('source')">〈/〉 HTML Source</button>
+        <button type="button" id="tab-visual" class="active" onclick="switchTab('visual')">{{t "✏️ Visual Editor"}}</button>
+        <button type="button" id="tab-source" onclick="switchTab('source')">{{t "〈/〉 HTML Source"}}</button>
       </div>
 
       <div id="panel-visual" class="tab-panel active">
         <div id="editor-container"></div>
-        <div class="char-info"><span id="char-count">0</span> characters</div>
+        <div class="char-info"><span id="char-count">0</span> {{t "characters"}}</div>
       </div>
       <div id="panel-source" class="tab-panel">
         <textarea id="html-source" class="html-source"></textarea>
@@ -549,9 +548,9 @@
 
     <!-- ── Script Converters (tabbed: Preeti | ITRANS) ──────── -->
     <div class="preeti-panel" id="converter-panel">
-      <h3>🔠 Script Converters <span class="badge-preeti badge-tools">TOOLS</span></h3>
+      <h3>{{t "🔠 Script Converters"}} <span class="badge-preeti badge-tools">{{t "TOOLS"}}</span></h3>
       <p class="converter-intro">
-        Convert old encoding schemes to proper Unicode Devanagari, then insert into the editor.
+        {{t "Convert old encoding schemes to proper Unicode Devanagari, then insert into the editor."}}
       </p>
 
       <!-- Converter tabs -->
@@ -559,64 +558,64 @@
         <button type="button" id="cv-preeti-tab"
           class="converter-tab active"
           onclick="switchConverter('preeti')">
-          🇳 Preeti → Unicode (नेपाली)
+          {{t "🇳 Preeti → Unicode (नेपाली)"}}
         </button>
         <button type="button" id="cv-itrans-tab"
           class="converter-tab"
           onclick="switchConverter('itrans')">
-          🕉️ ITRANS → Devanagari (संस्कृत)
+          {{t "🕉️ ITRANS → Devanagari (संस्कृत)"}}
         </button>
       </div>
 
       <!-- Preeti pane -->
       <div id="cv-preeti">
         <p class="converter-help">
-          For Nepali text typed in <strong>Preeti font</strong> (old MS Word, OCR).
+          {{t "For Nepali text typed in Preeti font (old MS Word, OCR)."}}
         </p>
         <div class="preeti-io">
           <div>
-            <div class="converter-label">Preeti Input</div>
-            <textarea id="preeti-input" placeholder="Paste Preeti text here…&#10;e.g. k'/n ;doGjoy sfo{qmd"></textarea>
+            <div class="converter-label">{{t "Preeti Input"}}</div>
+            <textarea id="preeti-input" placeholder="{{t "Paste Preeti text here…\ne.g. k'/n ;doGjoy sfo{qmd"}}"></textarea>
           </div>
           <div class="preeti-arrow">→</div>
           <div>
-            <div class="converter-label">Unicode Output (नेपाली)</div>
-            <textarea id="uni-output" readonly placeholder="Converted Unicode will appear here…"></textarea>
+            <div class="converter-label">{{t "Unicode Output (नेपाली)"}}</div>
+            <textarea id="uni-output" readonly placeholder="{{t "Converted Unicode will appear here…"}}"></textarea>
           </div>
         </div>
         <div class="preeti-actions">
-          <button type="button" class="btn-convert" onclick="runPreetiConvert()">⟳ Convert</button>
-          <button type="button" class="btn-insert" onclick="insertFromConverter('preeti')">↑ Insert into Editor</button>
-          <button type="button" class="btn-insert" onclick="clearConverter('preeti')">✕ Clear</button>
+          <button type="button" class="btn-convert" onclick="runPreetiConvert()">{{t "⟳ Convert"}}</button>
+          <button type="button" class="btn-insert" onclick="insertFromConverter('preeti')">{{t "↑ Insert into Editor"}}</button>
+          <button type="button" class="btn-insert" onclick="clearConverter('preeti')">{{t "✕ Clear"}}</button>
         </div>
       </div>
 
       <!-- ITRANS pane -->
       <div id="cv-itrans" class="converter-pane-hidden">
         <p class="converter-help">
-          For <strong>Sanskrit</strong> (and Nepali) in <strong>ITRANS</strong> — ASCII transliteration used in academic Sanskrit texts.<br>
-          Examples: <code>dharma</code> → धर्म &nbsp;|&nbsp; <code>namaH</code> → नमः &nbsp;|&nbsp; <code>saMskRRitam</code> → संस्कृतम् &nbsp;|&nbsp; <code>OM</code> → ॐ
+          {{t "For Sanskrit and Nepali typed in ITRANS transliteration."}}
+          {{t "Examples:"}} <code>dharma</code> → धर्म &nbsp;|&nbsp; <code>namaH</code> → नमः &nbsp;|&nbsp; <code>saMskRRitam</code> → संस्कृतम् &nbsp;|&nbsp; <code>OM</code> → ॐ
         </p>
         <div class="preeti-io">
           <div>
-            <div class="converter-label">ITRANS Input (Sanskrit)</div>
-            <textarea id="itrans-input" placeholder="Type or paste ITRANS here…&#10;e.g. namaH shivAya&#10;dharmaH rakShati rakShitaH"></textarea>
+            <div class="converter-label">{{t "ITRANS Input (Sanskrit)"}}</div>
+            <textarea id="itrans-input" placeholder="{{t "Type or paste ITRANS here…\ne.g. namaH shivAya\ndharmaH rakShati rakShitaH"}}"></textarea>
           </div>
           <div class="preeti-arrow">→</div>
           <div>
-            <div class="converter-label">Devanagari Output</div>
-            <textarea id="itrans-output" readonly placeholder="Converted Devanagari will appear here…"></textarea>
+            <div class="converter-label">{{t "Devanagari Output"}}</div>
+            <textarea id="itrans-output" readonly placeholder="{{t "Converted Devanagari will appear here…"}}"></textarea>
           </div>
         </div>
         <div class="preeti-actions">
-          <button type="button" class="btn-convert" onclick="runItransConvert()">⟳ Convert</button>
-          <button type="button" class="btn-insert" onclick="insertFromConverter('itrans')">↑ Insert into Editor</button>
-          <button type="button" class="btn-insert" onclick="clearConverter('itrans')">✕ Clear</button>
+          <button type="button" class="btn-convert" onclick="runItransConvert()">{{t "⟳ Convert"}}</button>
+          <button type="button" class="btn-insert" onclick="insertFromConverter('itrans')">{{t "↑ Insert into Editor"}}</button>
+          <button type="button" class="btn-insert" onclick="clearConverter('itrans')">{{t "✕ Clear"}}</button>
         </div>
         <div class="converter-reference">
-          📚 Quick ref: <strong>k kh g gh c ch j jh T Th D Dh N t th d dh n p ph b bh m y r l v s sh Sh h</strong> = consonants<br>
-          <strong>a A i I u U e o ai au</strong> = vowels &nbsp;|&nbsp;
-          <strong>M H</strong> = anusvara/visarga &nbsp;|&nbsp;
+          {{t "📚 Quick ref:"}} <strong>k kh g gh c ch j jh T Th D Dh N t th d dh n p ph b bh m y r l v s sh Sh h</strong> {{t "= consonants"}}<br>
+          <strong>a A i I u U e o ai au</strong> {{t "= vowels"}} &nbsp;|&nbsp;
+          <strong>M H</strong> {{t "= anusvara/visarga"}} &nbsp;|&nbsp;
           <strong>kSh GY</strong> = क्ष ज्ञ &nbsp;|&nbsp;
           <strong>| ||</strong> = । ॥ &nbsp;|&nbsp; <strong>OM</strong> = ॐ
         </div>
@@ -624,23 +623,23 @@
     </div>
 
     <!-- ── File Upload ─────────────────────────────────────── -->
-    <div class="section-divider">Attachment / संलग्न फाइल</div>
+    <div class="section-divider">{{t "Attachment / संलग्न फाइल"}}</div>
 
     <div class="fg">
-      <label>फाइल (PDF, Image, Word…) — Optional</label>
+      <label>{{t "फाइल (PDF, Image, Word…) — Optional"}}</label>
       <div class="drop-zone" id="drop-zone">
         <span class="dz-icon">📄</span>
-        <span id="drop-label">Drag & drop file here, or click to browse</span>
+        <span id="drop-label">{{t "Drag & drop file here, or click to browse"}}</span>
         <input type="file" id="file" name="file" class="file-input-hidden"
                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff">
       </div>
-      <div class="hint">Accepted: PDF, Word, JPEG, PNG, TIFF. Max 50 MB.</div>
+      <div class="hint">{{t "Accepted: PDF, Word, JPEG, PNG, TIFF. Max 50 MB."}}</div>
     </div>
 
     <!-- ── Submit ──────────────────────────────────────────── -->
     <div class="submit-area">
-      <button type="button" class="btn-secondary" onclick="history.back()">Cancel</button>
-      <button type="submit" class="btn-primary">📤 अपलोड गर्नुहोस्</button>
+      <button type="button" class="btn-secondary" onclick="history.back()">{{t "Cancel"}}</button>
+      <button type="submit" class="btn-primary">{{t "📤 अपलोड गर्नुहोस्"}}</button>
     </div>
   </form>
 </div>
@@ -674,7 +673,7 @@ const toolbarOptions = [
 
 const quill = new Quill('#editor-container', {
   theme: 'snow',
-  placeholder: 'Start typing your content here. Use the toolbar for formatting — headings, bold, lists, blockquotes and more…',
+  placeholder: window.yogilibT("Start typing your content here. Use the toolbar for formatting — headings, bold, lists, blockquotes and more…"),
   modules: { toolbar: toolbarOptions },
 });
 
@@ -736,7 +735,7 @@ npUnicodeBtn.addEventListener('click', () => {
   npMode = 'unicode';
   npUnicodeBtn.classList.add('active');
   npPreetiBtn.classList.remove('active');
-  npModeLabel.textContent = 'Unicode (direct)';
+  npModeLabel.textContent = window.yogilibT("Unicode (direct)");
   titleNpInput.placeholder = 'उदाहरण: सुगौली सन्धि';
 });
 
@@ -744,8 +743,8 @@ npPreetiBtn.addEventListener('click', () => {
   npMode = 'preeti';
   npPreetiBtn.classList.add('active');
   npUnicodeBtn.classList.remove('active');
-  npModeLabel.textContent = 'Preeti → Unicode (live convert)';
-  titleNpInput.placeholder = 'Type Preeti keys — auto-converts to Unicode';
+  npModeLabel.textContent = window.yogilibT("Preeti → Unicode (live convert)");
+  titleNpInput.placeholder = window.yogilibT("Type Preeti keys — auto-converts to Unicode");
   titleNpInput.value = '';
 });
 
@@ -775,7 +774,7 @@ auUnicodeBtn.addEventListener('click', () => {
   auMode = 'unicode';
   auUnicodeBtn.classList.add('active');
   auPreetiBtn.classList.remove('active');
-  auModeLabel.textContent = 'Unicode (direct)';
+  auModeLabel.textContent = window.yogilibT("Unicode (direct)");
   authorNpInput.placeholder = 'उदाहरण: योगी नरहरिनाथ';
 });
 
@@ -783,8 +782,8 @@ auPreetiBtn.addEventListener('click', () => {
   auMode = 'preeti';
   auPreetiBtn.classList.add('active');
   auUnicodeBtn.classList.remove('active');
-  auModeLabel.textContent = 'Preeti → Unicode (live convert)';
-  authorNpInput.placeholder = 'Type Preeti keys — auto-converts to Unicode';
+  auModeLabel.textContent = window.yogilibT("Preeti → Unicode (live convert)");
+  authorNpInput.placeholder = window.yogilibT("Type Preeti keys — auto-converts to Unicode");
   authorNpInput.value = '';
 });
 

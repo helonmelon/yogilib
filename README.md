@@ -10,8 +10,8 @@ Built with **Go** using `net/http` and `html/template`. Every page is server-ren
 
 ```bash
 go mod tidy             # install Go dependencies
-go run main.go          # dev server at http://localhost:8080
-DEV_RELOAD=1 go run main.go # dev server with browser auto-reload
+go run .          # dev server at http://localhost:8080
+DEV_RELOAD=1 go run . # dev server with browser auto-reload
 go build -o yogilib .   # production binary
 PORT=9000 ./yogilib     # custom port
 ```
@@ -26,7 +26,7 @@ On a second computer:
 git clone git@github.com:helonmelon/yogilib.git
 cd yogilib
 neon link --project-id lucky-boat-33662130 --branch production -y
-go run main.go
+go run .
 ```
 
 If you are not using the Neon CLI, copy `.env.example` to `.env.local` and fill in `DATABASE_URL`.

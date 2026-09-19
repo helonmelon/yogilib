@@ -1,17 +1,17 @@
 {{define "content"}}
 <section class="doc-section">
-  <h2>भर्खरका कागजातहरू</h2>
+  <h2>{{t "भर्खरका कागजातहरू"}}</h2>
 
   <form class="search-row" method="GET" action="/">
-    <input type="search" name="q" value="{{.Query}}" placeholder="खोज्नुहोस्…">
+    <input type="search" name="q" value="{{.Query}}" placeholder="{{t "खोज्नुहोस्…"}}">
     {{if .Category}}<input type="hidden" name="cat" value="{{.Category}}">{{end}}
-    <button type="submit">खोज्नुहोस्</button>
+    <button type="submit">{{t "खोज्नुहोस्"}}</button>
   </form>
 
   {{/* Category filter tabs */}}
   <div class="category-tabs">
     {{range .Categories}}
-    <a href="/?cat={{.}}" class="{{if eq . $.Category}}active{{end}}">{{.}}</a>
+    <a href="/?cat={{.}}" class="{{if eq . $.Category}}active{{end}}">{{t .}}</a>
     {{end}}
   </div>
 
@@ -25,16 +25,16 @@
       <a class="doc-title" href="/document/{{.ID}}">{{.Title}}</a>
       {{if .TitleNP}}<span class="doc-title-np">{{.TitleNP}}</span>{{end}}
       <div class="doc-meta">
-        {{if .Category}}<span class="tag">{{.Category}}</span>{{end}}
+        {{if .Category}}<span class="tag">{{t .Category}}</span>{{end}}
         {{if .Description}}<span>{{.Description}}</span>{{end}}
         <span>{{.CreatedAt}}</span>
-        <a class="doc-edit-link" href="/document/{{.ID}}/edit">सम्पादन</a>
+        <a class="doc-edit-link" href="/document/{{.ID}}/edit">{{t "सम्पादन"}}</a>
       </div>
     </li>
     {{end}}
   </ul>
   {{else}}
-  <p class="empty-state">अहिलेसम्म कुनै कागजात छैन। <a href="/upload">योगदान गर्नुहोस् →</a></p>
+  <p class="empty-state">{{t "अहिलेसम्म कुनै कागजात छैन।"}} <a href="/upload">{{t "योगदान गर्नुहोस् →"}}</a></p>
   {{end}}
 </section>
 {{end}}

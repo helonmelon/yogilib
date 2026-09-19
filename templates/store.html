@@ -1,7 +1,7 @@
 {{define "content"}}
 <div class="container">
   <div class="store-hero">
-    <h1>Store — पसल</h1>
+    <h1>{{t "Store — पसल"}}</h1>
     <p>
       Books and materials published or curated by Yogilib.
     </p>
@@ -21,7 +21,7 @@
       <p>{{.Description}}</p>
       {{if .BuyURL}}
       <a class="btn btn-primary btn-nowrap" href="{{.BuyURL}}" target="_blank" rel="noopener">
-        Buy →
+        {{t "Buy →"}}
       </a>
       {{end}}
     </div>
@@ -29,7 +29,7 @@
   </div>
   {{else}}
   <p class="empty-state empty-state-spacious">
-    No items yet. Check back soon.
+    {{t "No items yet. Check back soon."}}
   </p>
   {{end}}
 </div>

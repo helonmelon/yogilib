@@ -57,7 +57,7 @@ On another computer:
 
 ```bash
 neon link --project-id lucky-boat-33662130 --branch production -y
-go run main.go
+go run .
 ```
 
 ## Handler Map

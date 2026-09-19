@@ -1,0 +1,1070 @@
+{
+  "ड्यासबोर्ड": {
+    "en": "Dashboard",
+    "ne": "ड्यासबोर्ड"
+  },
+  "अपलोड": {
+    "en": "Upload",
+    "ne": "अपलोड"
+  },
+  "बाहिर": {
+    "en": "Sign out",
+    "ne": "बाहिर निस्कनुहोस्"
+  },
+  "बारेमा": {
+    "en": "About",
+    "ne": "बारेमा"
+  },
+  "ग्रन्थावली": {
+    "en": "Works",
+    "ne": "ग्रन्थावली"
+  },
+  "योगदान": {
+    "en": "Contribute",
+    "ne": "योगदान"
+  },
+  "खोज्नुहोस्…": {
+    "en": "Search…",
+    "ne": "खोज्नुहोस्…"
+  },
+  "खोज्नुहोस्": {
+    "en": "Search",
+    "ne": "खोज्नुहोस्"
+  },
+  "भर्खरका कागजातहरू": {
+    "en": "Recent documents",
+    "ne": "भर्खरका कागजातहरू"
+  },
+  "कागजातहरू": {
+    "en": "documents",
+    "ne": "कागजातहरू"
+  },
+  "+ अपलोड": {
+    "en": "+ Upload",
+    "ne": "+ अपलोड"
+  },
+  "हेर्नुहोस्": {
+    "en": "View",
+    "ne": "हेर्नुहोस्"
+  },
+  "सम्पादन": {
+    "en": "Edit",
+    "ne": "सम्पादन"
+  },
+  "कुनै कागजात भेटिएन।": {
+    "en": "No documents found.",
+    "ne": "कुनै कागजात भेटिएन।"
+  },
+  "अपलोड गर्नुहोस् →": {
+    "en": "Upload a document →",
+    "ne": "अपलोड गर्नुहोस् →"
+  },
+  "अहिलेसम्म कुनै कागजात छैन।": {
+    "en": "No documents yet.",
+    "ne": "अहिलेसम्म कुनै कागजात छैन।"
+  },
+  "योगदान गर्नुहोस् →": {
+    "en": "Contribute →",
+    "ne": "योगदान गर्नुहोस् →"
+  },
+  "सबै": {
+    "en": "All",
+    "ne": "सबै"
+  },
+  "किताब": {
+    "en": "Books",
+    "ne": "किताब"
+  },
+  "कागजात": {
+    "en": "Documents",
+    "ne": "कागजात"
+  },
+  "रेकर्ड": {
+    "en": "Records",
+    "ne": "रेकर्ड"
+  },
+  "पत्रिका": {
+    "en": "Journals",
+    "ne": "पत्रिका"
+  },
+  "अंश": {
+    "en": "Excerpts",
+    "ne": "अंश"
+  },
+  "अन्य": {
+    "en": "Other",
+    "ne": "अन्य"
+  },
+  "थपिएको:": {
+    "en": "Added:",
+    "ne": "थपिएको:"
+  },
+  "कागजात सम्पादन": {
+    "en": "Edit document",
+    "ne": "कागजात सम्पादन"
+  },
+  "← कागजातमा फर्कनुहोस्": {
+    "en": "← Back to document",
+    "ne": "← कागजातमा फर्कनुहोस्"
+  },
+  "शीर्षक (English)": {
+    "en": "Title (English)",
+    "ne": "शीर्षक (अङ्ग्रेजी)"
+  },
+  "Title (English)": {
+    "en": "Title (English)",
+    "ne": "शीर्षक (अङ्ग्रेजी)"
+  },
+  "शीर्षक (नेपाली)": {
+    "en": "Title (Nepali)",
+    "ne": "शीर्षक (नेपाली)"
+  },
+  "वर्ग / Category": {
+    "en": "Category",
+    "ne": "वर्ग"
+  },
+  "— छान्नुहोस् —": {
+    "en": "— Select —",
+    "ne": "— छान्नुहोस् —"
+  },
+  "— छान्नुहोस् / Select —": {
+    "en": "— Select —",
+    "ne": "— छान्नुहोस् —"
+  },
+  "— Select —": {
+    "en": "— Select —",
+    "ne": "— छान्नुहोस् —"
+  },
+  "किताब (Book)": {
+    "en": "Book",
+    "ne": "किताब"
+  },
+  "कागजात (Document)": {
+    "en": "Document",
+    "ne": "कागजात"
+  },
+  "रेकर्ड (Record)": {
+    "en": "Record",
+    "ne": "रेकर्ड"
+  },
+  "पत्रिका (Journal)": {
+    "en": "Journal",
+    "ne": "पत्रिका"
+  },
+  "अंश (Excerpt)": {
+    "en": "Excerpt",
+    "ne": "अंश"
+  },
+  "अन्य (Other)": {
+    "en": "Other",
+    "ne": "अन्य"
+  },
+  "भाषा / Language": {
+    "en": "Document language",
+    "ne": "कागजातको भाषा"
+  },
+  "लिपि / Script": {
+    "en": "Script",
+    "ne": "लिपि"
+  },
+  "English": {
+    "en": "English",
+    "ne": "अङ्ग्रेजी"
+  },
+  "नेपाली": {
+    "en": "Nepali",
+    "ne": "नेपाली"
+  },
+  "नेपाली (Nepali)": {
+    "en": "Nepali",
+    "ne": "नेपाली"
+  },
+  "संस्कृत": {
+    "en": "Sanskrit",
+    "ne": "संस्कृत"
+  },
+  "संस्कृत (Sanskrit)": {
+    "en": "Sanskrit",
+    "ne": "संस्कृत"
+  },
+  "नेपाली + संस्कृत": {
+    "en": "Nepali + Sanskrit",
+    "ne": "नेपाली + संस्कृत"
+  },
+  "नेपाली + संस्कृत (Bilingual)": {
+    "en": "Nepali + Sanskrit",
+    "ne": "नेपाली + संस्कृत"
+  },
+  "Mixed": {
+    "en": "Mixed",
+    "ne": "मिश्रित"
+  },
+  "Mixed / बहुभाषिक": {
+    "en": "Multilingual",
+    "ne": "बहुभाषिक"
+  },
+  "Other": {
+    "en": "Other",
+    "ne": "अन्य"
+  },
+  "देवनागरी": {
+    "en": "Devanagari",
+    "ne": "देवनागरी"
+  },
+  "देवनागरी (Devanagari)": {
+    "en": "Devanagari",
+    "ne": "देवनागरी"
+  },
+  "Latin / Roman": {
+    "en": "Latin / Roman",
+    "ne": "ल्याटिन / रोमन"
+  },
+  "Latin IAST": {
+    "en": "Latin IAST",
+    "ne": "ल्याटिन IAST"
+  },
+  "Latin IAST (romanized Sanskrit)": {
+    "en": "Latin IAST (romanized Sanskrit)",
+    "ne": "ल्याटिन IAST (रोमन लिपिमा संस्कृत)"
+  },
+  "Mixed scripts": {
+    "en": "Mixed scripts",
+    "ne": "मिश्रित लिपि"
+  },
+  "Original Year / मूल वर्ष": {
+    "en": "Original year",
+    "ne": "मूल वर्ष"
+  },
+  "Month / महिना": {
+    "en": "Month",
+    "ne": "महिना"
+  },
+  "Day / दिन": {
+    "en": "Day",
+    "ne": "दिन"
+  },
+  "Original Author (English)": {
+    "en": "Original author (English)",
+    "ne": "मूल लेखक (अङ्ग्रेजी)"
+  },
+  "Original Author (नेपाली)": {
+    "en": "Original author (Nepali)",
+    "ne": "मूल लेखक (नेपाली)"
+  },
+  "विवरण / Description": {
+    "en": "Description",
+    "ne": "विवरण"
+  },
+  "Content Body (HTML)": {
+    "en": "Content (HTML)",
+    "ne": "सामग्री (HTML)"
+  },
+  "Raw HTML from the rich text editor. Edit with care.": {
+    "en": "Raw HTML from the rich text editor. Edit with care.",
+    "ne": "सम्पादकबाट आएको HTML सामग्री। ध्यान दिएर सम्पादन गर्नुहोस्।"
+  },
+  "परिवर्तन सुरक्षित गर्नुहोस्": {
+    "en": "Save changes",
+    "ne": "परिवर्तन सुरक्षित गर्नुहोस्"
+  },
+  "रद्द गर्नुहोस्": {
+    "en": "Cancel",
+    "ne": "रद्द गर्नुहोस्"
+  },
+  "व्यवस्थापक पहुँच": {
+    "en": "Account sign-in",
+    "ne": "खातामा प्रवेश"
+  },
+  "इमेल": {
+    "en": "Email",
+    "ne": "इमेल"
+  },
+  "पासवर्ड": {
+    "en": "Password",
+    "ne": "पासवर्ड"
+  },
+  "प्रवेश गर्नुहोस्": {
+    "en": "Sign in",
+    "ne": "प्रवेश गर्नुहोस्"
+  },
+  "Reading tools": {
+    "en": "Reading tools",
+    "ne": "पढ्ने उपकरणहरू"
+  },
+  "Reading settings · पढ्ने सुविधा": {
+    "en": "Reading settings",
+    "ne": "पढ्ने सुविधा"
+  },
+  "Font size": {
+    "en": "Font size",
+    "ne": "अक्षरको आकार"
+  },
+  "Line spacing": {
+    "en": "Line spacing",
+    "ne": "पङ्क्तिबीचको दूरी"
+  },
+  "Page width": {
+    "en": "Page width",
+    "ne": "पृष्ठको चौडाइ"
+  },
+  "Narrow": {
+    "en": "Narrow",
+    "ne": "साँघुरो"
+  },
+  "Comfortable": {
+    "en": "Comfortable",
+    "ne": "सहज"
+  },
+  "Wide": {
+    "en": "Wide",
+    "ne": "फराकिलो"
+  },
+  "Find in document": {
+    "en": "Find in document",
+    "ne": "कागजातमा खोज्नुहोस्"
+  },
+  "Find": {
+    "en": "Find",
+    "ne": "खोज्नुहोस्"
+  },
+  "Previous match": {
+    "en": "Previous match",
+    "ne": "अघिल्लो नतिजा"
+  },
+  "Next match": {
+    "en": "Next match",
+    "ne": "अर्को नतिजा"
+  },
+  "Original + transcription": {
+    "en": "Original + transcription",
+    "ne": "मूल प्रति + उतारिएको पाठ"
+  },
+  "Table of contents": {
+    "en": "Table of contents",
+    "ne": "विषयसूची"
+  },
+  "Open / download original ↗": {
+    "en": "Open / download original ↗",
+    "ne": "मूल प्रति खोल्नुहोस् / डाउनलोड गर्नुहोस् ↗"
+  },
+  "तपाईंको ब्राउजरले यो फाइल प्रदर्शन गर्न सक्दैन।": {
+    "en": "Your browser cannot display this file.",
+    "ne": "तपाईंको ब्राउजरले यो फाइल प्रदर्शन गर्न सक्दैन।"
+  },
+  "डाउनलोड गर्नुहोस् →": {
+    "en": "Download →",
+    "ne": "डाउनलोड गर्नुहोस् →"
+  },
+  "अहिलेसम्म कुनै फाइल थपिएको छैन।": {
+    "en": "No file has been added yet.",
+    "ne": "अहिलेसम्म कुनै फाइल थपिएको छैन।"
+  },
+  "Highlights & private notes": {
+    "en": "Highlights & private notes",
+    "ne": "चिह्नित अंश र निजी टिप्पणीहरू"
+  },
+  "Select a passage in the text, then save a highlight or add a note. Notes are private to your account.": {
+    "en": "Select a passage in the text, then save a highlight or add a note. Notes are private to your account.",
+    "ne": "पाठको अंश छानेर चिह्नित गर्नुहोस् वा टिप्पणी थप्नुहोस्। टिप्पणीहरू तपाईंको खातामा निजी रहन्छन्।"
+  },
+  "Use selected passage": {
+    "en": "Use selected passage",
+    "ne": "छानिएको अंश प्रयोग गर्नुहोस्"
+  },
+  "Note": {
+    "en": "Note",
+    "ne": "टिप्पणी"
+  },
+  "Save highlight / note": {
+    "en": "Save highlight / note",
+    "ne": "चिह्नित अंश / टिप्पणी सुरक्षित गर्नुहोस्"
+  },
+  "Sign in": {
+    "en": "Sign in",
+    "ne": "प्रवेश गर्नुहोस्"
+  },
+  "to save private highlights and notes.": {
+    "en": "to save private highlights and notes.",
+    "ne": "गरेर निजी चिह्नित अंश र टिप्पणीहरू सुरक्षित गर्नुहोस्।"
+  },
+  "Revision history": {
+    "en": "Revision history",
+    "ne": "संशोधन इतिहास"
+  },
+  "History begins with edits made after this feature was added. Restoring also saves the current version.": {
+    "en": "History begins with edits made after this feature was added. Restoring also saves the current version.",
+    "ne": "यो सुविधा थपिएपछिका सम्पादनहरू इतिहासमा रहन्छन्। पुरानो संस्करण पुनर्स्थापना गर्दा हालको संस्करण पनि सुरक्षित हुन्छ।"
+  },
+  "कागजात भेटिएन।": {
+    "en": "Document not found.",
+    "ne": "कागजात भेटिएन।"
+  },
+  "← गृहपृष्ठ": {
+    "en": "← Home",
+    "ne": "← गृहपृष्ठ"
+  },
+  "← Home": {
+    "en": "← Home",
+    "ne": "← गृहपृष्ठ"
+  },
+  "Excerpts — अंशहरू": {
+    "en": "Excerpts",
+    "ne": "अंशहरू"
+  },
+  "Transcribed documents:": {
+    "en": "Transcribed documents:",
+    "ne": "उतारिएका कागजातहरू:"
+  },
+  "No excerpts yet.": {
+    "en": "No excerpts yet.",
+    "ne": "अहिलेसम्म कुनै अंश छैन।"
+  },
+  "Contribute one →": {
+    "en": "Contribute one →",
+    "ne": "योगदान गर्नुहोस् →"
+  },
+  "← All Excerpts": {
+    "en": "← All excerpts",
+    "ne": "← सबै अंशहरू"
+  },
+  "Content not yet available.": {
+    "en": "Content not yet available.",
+    "ne": "सामग्री अझै उपलब्ध छैन।"
+  },
+  "Store — पसल": {
+    "en": "Store",
+    "ne": "पसल"
+  },
+  "Buy →": {
+    "en": "Buy →",
+    "ne": "किन्नुहोस् →"
+  },
+  "No items yet. Check back soon.": {
+    "en": "No items yet. Check back soon.",
+    "ne": "अहिलेसम्म कुनै सामग्री छैन। पछि फेरि हेर्नुहोस्।"
+  },
+  "Similar Sites — अरु सान्दर्भिक साइटहरु": {
+    "en": "Related sites",
+    "ne": "अन्य सान्दर्भिक साइटहरू"
+  },
+  "Mission — उद्देश्य": {
+    "en": "Mission",
+    "ne": "उद्देश्य"
+  },
+  "योगदान गर्नुहोस्": {
+    "en": "Contribute",
+    "ne": "योगदान गर्नुहोस्"
+  },
+  "Contribute a document, book, record, or article to the Yogilib archive.": {
+    "en": "Contribute a document, book, record, or article to the Yogilib archive.",
+    "ne": "योगिलिब सङ्ग्रहमा कागजात, किताब, अभिलेख वा लेख थप्नुहोस्।"
+  },
+  "Type in Unicode Nepali": {
+    "en": "Type in Unicode Nepali",
+    "ne": "युनिकोड नेपालीमा टाइप गर्नुहोस्"
+  },
+  "Type in Preeti (auto-converts)": {
+    "en": "Type in Preeti (auto-converts)",
+    "ne": "प्रीतिमा टाइप गर्नुहोस् (स्वतः रूपान्तरण)"
+  },
+  "युनि": {
+    "en": "Unicode",
+    "ne": "युनिकोड"
+  },
+  "Preeti": {
+    "en": "Preeti",
+    "ne": "प्रीति"
+  },
+  "Unicode": {
+    "en": "Unicode",
+    "ne": "युनिकोड"
+  },
+  "Typing mode:": {
+    "en": "Typing mode:",
+    "ne": "टाइप गर्ने विधि:"
+  },
+  "Unicode (direct)": {
+    "en": "Unicode (direct)",
+    "ne": "युनिकोड (प्रत्यक्ष)"
+  },
+  "— Select language —": {
+    "en": "— Select language —",
+    "ne": "— भाषा छान्नुहोस् —"
+  },
+  "The primary language of the original document.": {
+    "en": "The primary language of the original document.",
+    "ne": "मूल कागजातको मुख्य भाषा।"
+  },
+  "— Select script —": {
+    "en": "— Select script —",
+    "ne": "— लिपि छान्नुहोस् —"
+  },
+  "— Month —": {
+    "en": "— Month —",
+    "ne": "— महिना —"
+  },
+  "✍️ Authorship / लेखक विवरण": {
+    "en": "✍️ Authorship",
+    "ne": "✍️ लेखक विवरण"
+  },
+  "Original Author / मूल लेखक": {
+    "en": "Original author",
+    "ne": "मूल लेखक"
+  },
+  "Who originally wrote or compiled this document.": {
+    "en": "Who originally wrote or compiled this document.",
+    "ne": "यो कागजात सुरुमा लेख्ने वा सङ्कलन गर्ने व्यक्ति।"
+  },
+  "Rich Text Content / सामग्री": {
+    "en": "Rich text content",
+    "ne": "स्वरूपसहितको सामग्री"
+  },
+  "Content Body": {
+    "en": "Content body",
+    "ne": "मुख्य सामग्री"
+  },
+  "Language:": {
+    "en": "Content language:",
+    "ne": "सामग्रीको भाषा:"
+  },
+  "✏️ Visual Editor": {
+    "en": "✏️ Visual editor",
+    "ne": "✏️ दृश्य सम्पादक"
+  },
+  "〈/〉 HTML Source": {
+    "en": "〈/〉 HTML source",
+    "ne": "〈/〉 HTML स्रोत"
+  },
+  "characters": {
+    "en": "characters",
+    "ne": "अक्षर"
+  },
+  "🔠 Script Converters": {
+    "en": "🔠 Script converters",
+    "ne": "🔠 लिपि रूपान्तरण"
+  },
+  "TOOLS": {
+    "en": "TOOLS",
+    "ne": "उपकरणहरू"
+  },
+  "Convert old encoding schemes to proper Unicode Devanagari, then insert into the editor.": {
+    "en": "Convert old encoding schemes to proper Unicode Devanagari, then insert into the editor.",
+    "ne": "पुरानो सङ्केतनलाई युनिकोड देवनागरीमा रूपान्तरण गरी सम्पादकमा राख्नुहोस्।"
+  },
+  "🇳 Preeti → Unicode (नेपाली)": {
+    "en": "Preeti → Unicode (Nepali)",
+    "ne": "प्रीति → युनिकोड (नेपाली)"
+  },
+  "🕉️ ITRANS → Devanagari (संस्कृत)": {
+    "en": "ITRANS → Devanagari (Sanskrit)",
+    "ne": "ITRANS → देवनागरी (संस्कृत)"
+  },
+  "Preeti Input": {
+    "en": "Preeti input",
+    "ne": "प्रीति पाठ"
+  },
+  "Unicode Output (नेपाली)": {
+    "en": "Unicode output (Nepali)",
+    "ne": "युनिकोड नतिजा (नेपाली)"
+  },
+  "Converted Unicode will appear here…": {
+    "en": "Converted Unicode will appear here…",
+    "ne": "रूपान्तरित युनिकोड यहाँ देखिनेछ…"
+  },
+  "⟳ Convert": {
+    "en": "⟳ Convert",
+    "ne": "⟳ रूपान्तरण गर्नुहोस्"
+  },
+  "↑ Insert into Editor": {
+    "en": "↑ Insert into editor",
+    "ne": "↑ सम्पादकमा राख्नुहोस्"
+  },
+  "✕ Clear": {
+    "en": "✕ Clear",
+    "ne": "✕ खाली गर्नुहोस्"
+  },
+  "ITRANS Input (Sanskrit)": {
+    "en": "ITRANS input (Sanskrit)",
+    "ne": "ITRANS पाठ (संस्कृत)"
+  },
+  "Devanagari Output": {
+    "en": "Devanagari output",
+    "ne": "देवनागरी नतिजा"
+  },
+  "Converted Devanagari will appear here…": {
+    "en": "Converted Devanagari will appear here…",
+    "ne": "रूपान्तरित देवनागरी यहाँ देखिनेछ…"
+  },
+  "Attachment / संलग्न फाइल": {
+    "en": "Attachment",
+    "ne": "संलग्न फाइल"
+  },
+  "फाइल (PDF, Image, Word…) — Optional": {
+    "en": "File (PDF, image, Word…) — optional",
+    "ne": "फाइल (PDF, तस्वीर, Word…) — वैकल्पिक"
+  },
+  "Drag & drop file here, or click to browse": {
+    "en": "Drag & drop file here, or click to browse",
+    "ne": "फाइल यहाँ तानेर छोड्नुहोस् वा छान्न क्लिक गर्नुहोस्"
+  },
+  "Accepted: PDF, Word, JPEG, PNG, TIFF. Max 50 MB.": {
+    "en": "Accepted: PDF, Word, JPEG, PNG, TIFF. Max 50 MB.",
+    "ne": "स्वीकार्य: PDF, Word, JPEG, PNG, TIFF। अधिकतम ५० MB।"
+  },
+  "Cancel": {
+    "en": "Cancel",
+    "ne": "रद्द गर्नुहोस्"
+  },
+  "📤 अपलोड गर्नुहोस्": {
+    "en": "📤 Upload",
+    "ne": "📤 अपलोड गर्नुहोस्"
+  },
+  "Title is required.": {
+    "en": "Title is required.",
+    "ne": "शीर्षक आवश्यक छ।"
+  },
+  "Invalid email or password.": {
+    "en": "Invalid email or password.",
+    "ne": "इमेल वा पासवर्ड मिलेन।"
+  },
+  "Home": {
+    "en": "Home",
+    "ne": "गृहपृष्ठ"
+  },
+  "Login": {
+    "en": "Sign in",
+    "ne": "प्रवेश"
+  },
+  "Dashboard": {
+    "en": "Dashboard",
+    "ne": "ड्यासबोर्ड"
+  },
+  "Contribute — योगदान": {
+    "en": "Contribute",
+    "ne": "योगदान"
+  },
+  "Works — ग्रन्थावली": {
+    "en": "Works",
+    "ne": "ग्रन्थावली"
+  },
+  "Similar Sites — अरु साइट": {
+    "en": "Related sites",
+    "ne": "अन्य सान्दर्भिक साइटहरू"
+  },
+  "About Yogi Narharinath — योगीबारे": {
+    "en": "About Yogi Narharinath",
+    "ne": "योगी नरहरिनाथबारे"
+  },
+  "Interface language": {
+    "en": "Interface language",
+    "ne": "वेबसाइटको भाषा"
+  },
+  "Signed in as": {
+    "en": "Signed in as",
+    "ne": "प्रवेश गरिएको खाता"
+  },
+  "Apply": {
+    "en": "Apply",
+    "ne": "लागू गर्नुहोस्"
+  },
+  "Unsaved changes will be lost. Change language?": {
+    "en": "Unsaved changes will be lost. Change language?",
+    "ne": "सुरक्षित नगरिएका परिवर्तनहरू हराउनेछन्। भाषा परिवर्तन गर्ने?"
+  },
+  "Could not complete this action. Check your connection and sign-in, then try again.": {
+    "en": "Could not complete this action. Check your connection and sign-in, then try again.",
+    "ne": "यो काम पूरा हुन सकेन। जडान र खातामा प्रवेश जाँचेर फेरि प्रयास गर्नुहोस्।"
+  },
+  "Copy link to this passage": {
+    "en": "Copy link to this passage",
+    "ne": "यस अंशको लिङ्क प्रतिलिपि गर्नुहोस्"
+  },
+  "Passage link copied.": {
+    "en": "Passage link copied.",
+    "ne": "अंशको लिङ्क प्रतिलिपि भयो।"
+  },
+  "Copy the passage link from your address bar.": {
+    "en": "Copy the passage link from your address bar.",
+    "ne": "ठेगाना पट्टीबाट अंशको लिङ्क प्रतिलिपि गर्नुहोस्।"
+  },
+  "No headings in this document yet.": {
+    "en": "No headings in this document yet.",
+    "ne": "यो कागजातमा उपशीर्षकहरू छैनन्।"
+  },
+  "No matches": {
+    "en": "No matches",
+    "ne": "नतिजा भेटिएन"
+  },
+  "Original document scan": {
+    "en": "Original document scan",
+    "ne": "मूल कागजातको स्क्यान"
+  },
+  "Passage selected. Add an optional note and save.": {
+    "en": "Passage selected. Add an optional note and save.",
+    "ne": "अंश छानियो। चाहनुहुन्छ भने टिप्पणी थपेर सुरक्षित गर्नुहोस्।"
+  },
+  "Select text in the document first.": {
+    "en": "Select text in the document first.",
+    "ne": "पहिले कागजातको पाठ छान्नुहोस्।"
+  },
+  "Find passage": {
+    "en": "Find passage",
+    "ne": "अंश खोज्नुहोस्"
+  },
+  "This passage has changed since the note was saved.": {
+    "en": "This passage has changed since the note was saved.",
+    "ne": "टिप्पणी सुरक्षित गरेपछि यो अंश परिवर्तन भएको छ।"
+  },
+  "Delete note": {
+    "en": "Delete note",
+    "ne": "टिप्पणी मेट्नुहोस्"
+  },
+  "No saved highlights yet.": {
+    "en": "No saved highlights yet.",
+    "ne": "अहिलेसम्म कुनै चिह्नित अंश सुरक्षित छैन।"
+  },
+  "Select a passage first.": {
+    "en": "Select a passage first.",
+    "ne": "पहिले अंश छान्नुहोस्।"
+  },
+  "Saved privately to your account.": {
+    "en": "Saved privately to your account.",
+    "ne": "तपाईंको खातामा निजी रूपमा सुरक्षित भयो।"
+  },
+  "Restore this version": {
+    "en": "Restore this version",
+    "ne": "यो संस्करण पुनर्स्थापना गर्नुहोस्"
+  },
+  "Restore this version? The current version will be saved in history.": {
+    "en": "Restore this version? The current version will be saved in history.",
+    "ne": "यो संस्करण पुनर्स्थापना गर्ने? हालको संस्करण इतिहासमा सुरक्षित हुनेछ।"
+  },
+  "No previous versions yet.": {
+    "en": "No previous versions yet.",
+    "ne": "अहिलेसम्म पुराना संस्करणहरू छैनन्।"
+  },
+  "Preeti → Unicode (live convert)": {
+    "en": "Preeti → Unicode (live convert)",
+    "ne": "प्रीति → युनिकोड (तत्काल रूपान्तरण)"
+  },
+  "Type Preeti keys — auto-converts to Unicode": {
+    "en": "Type Preeti keys — auto-converts to Unicode",
+    "ne": "प्रीतिमा टाइप गर्नुहोस् — युनिकोडमा स्वतः रूपान्तरण हुन्छ"
+  },
+  "Start typing your content here. Use the toolbar for formatting — headings, bold, lists, blockquotes and more…": {
+    "en": "Start typing your content here. Use the toolbar for formatting — headings, bold, lists, blockquotes and more…",
+    "ne": "यहाँ सामग्री लेख्नुहोस्। शीर्षक, बाक्लो अक्षर, सूची र उद्धरणका लागि उपकरणपट्टी प्रयोग गर्नुहोस्…"
+  },
+  "January": {
+    "en": "January",
+    "ne": "जनवरी"
+  },
+  "January / जनवरी": {
+    "en": "January",
+    "ne": "जनवरी"
+  },
+  "February": {
+    "en": "February",
+    "ne": "फेब्रुअरी"
+  },
+  "February / फेब्रुअरी": {
+    "en": "February",
+    "ne": "फेब्रुअरी"
+  },
+  "March": {
+    "en": "March",
+    "ne": "मार्च"
+  },
+  "March / मार्च": {
+    "en": "March",
+    "ne": "मार्च"
+  },
+  "April": {
+    "en": "April",
+    "ne": "अप्रिल"
+  },
+  "April / अप्रिल": {
+    "en": "April",
+    "ne": "अप्रिल"
+  },
+  "May": {
+    "en": "May",
+    "ne": "मे"
+  },
+  "May / मे": {
+    "en": "May",
+    "ne": "मे"
+  },
+  "June": {
+    "en": "June",
+    "ne": "जुन"
+  },
+  "June / जुन": {
+    "en": "June",
+    "ne": "जुन"
+  },
+  "July": {
+    "en": "July",
+    "ne": "जुलाई"
+  },
+  "July / जुलाई": {
+    "en": "July",
+    "ne": "जुलाई"
+  },
+  "August": {
+    "en": "August",
+    "ne": "अगस्ट"
+  },
+  "August / अगस्ट": {
+    "en": "August",
+    "ne": "अगस्ट"
+  },
+  "September": {
+    "en": "September",
+    "ne": "सेप्टेम्बर"
+  },
+  "September / सेप्टेम्बर": {
+    "en": "September",
+    "ne": "सेप्टेम्बर"
+  },
+  "October": {
+    "en": "October",
+    "ne": "अक्टोबर"
+  },
+  "October / अक्टोबर": {
+    "en": "October",
+    "ne": "अक्टोबर"
+  },
+  "November": {
+    "en": "November",
+    "ne": "नोभेम्बर"
+  },
+  "November / नोभेम्बर": {
+    "en": "November",
+    "ne": "नोभेम्बर"
+  },
+  "December": {
+    "en": "December",
+    "ne": "डिसेम्बर"
+  },
+  "December / डिसेम्बर": {
+    "en": "December",
+    "ne": "डिसेम्बर"
+  },
+  "Upload date is recorded automatically. Enter the original document date below.": {
+    "en": "Upload date is recorded automatically. Enter the original document date below.",
+    "ne": "अपलोड मिति स्वतः सुरक्षित हुन्छ। तल मूल कागजातको मिति राख्नुहोस्।"
+  },
+  "Your signed-in account will be recorded as the contributor.": {
+    "en": "Your signed-in account will be recorded as the contributor.",
+    "ne": "योगदानकर्ताको रूपमा तपाईंले प्रवेश गरेको खाता सुरक्षित हुनेछ।"
+  },
+  "For Nepali text typed in Preeti font (old MS Word, OCR).": {
+    "en": "For Nepali text typed in Preeti font (old MS Word, OCR).",
+    "ne": "प्रीति फन्टमा लेखिएको नेपाली पाठका लागि (पुरानो MS Word, OCR)।"
+  },
+  "For Sanskrit and Nepali typed in ITRANS transliteration.": {
+    "en": "For Sanskrit and Nepali typed in ITRANS transliteration.",
+    "ne": "ITRANS लिप्यन्तरणमा लेखिएको संस्कृत र नेपाली पाठका लागि।"
+  },
+  "Examples:": {
+    "en": "Examples:",
+    "ne": "उदाहरणहरू:"
+  },
+  "📚 Quick ref:": {
+    "en": "📚 Quick ref:",
+    "ne": "📚 छोटो सन्दर्भ:"
+  },
+  "= consonants": {
+    "en": "= consonants",
+    "ne": "= व्यञ्जन"
+  },
+  "= vowels": {
+    "en": "= vowels",
+    "ne": "= स्वर"
+  },
+  "= anusvara/visarga": {
+    "en": "= anusvara/visarga",
+    "ne": "= अनुस्वार/विसर्ग"
+  },
+  "e.g. Treaty of Sugowlee, 1815": {
+    "en": "e.g. Treaty of Sugowlee, 1815",
+    "ne": "उदाहरण: सुगौली सन्धि, १८१५"
+  },
+  "e.g. 1815 or १८७२": {
+    "en": "e.g. 1815 or १८७२",
+    "ne": "उदाहरण: १८१५ वा १८७२"
+  },
+  "e.g. 2": {
+    "en": "e.g. 2",
+    "ne": "उदाहरण: २"
+  },
+  "e.g. Yogi Narharinath / योगी नरहरिनाथ": {
+    "en": "e.g. Yogi Narharinath / योगी नरहरिनाथ",
+    "ne": "उदाहरण: योगी नरहरिनाथ"
+  },
+  "Paste Preeti text here…\ne.g. k'/n ;doGjoy sfo{qmd": {
+    "en": "Paste Preeti text here…\ne.g. k'/n ;doGjoy sfo{qmd",
+    "ne": "प्रीति पाठ यहाँ राख्नुहोस्…\nउदाहरण: k'/n ;doGjoy sfo{qmd"
+  },
+  "Type or paste ITRANS here…\ne.g. namaH shivAya\ndharmaH rakShati rakShitaH": {
+    "en": "Type or paste ITRANS here…\ne.g. namaH shivAya\ndharmaH rakShati rakShitaH",
+    "ne": "ITRANS यहाँ लेख्नुहोस् वा राख्नुहोस्…\nउदाहरण: namaH shivAya\ndharmaH rakShati rakShitaH"
+  },
+  "e.g. 1815": {
+    "en": "e.g. 1815",
+    "ne": "उदाहरण: १८१५"
+  },
+  "Forbidden": {
+    "en": "Forbidden",
+    "ne": "अनुमति छैन"
+  },
+  "Bad request": {
+    "en": "Bad request",
+    "ne": "अनुरोध मिलेन"
+  },
+  "Database error": {
+    "en": "Database error",
+    "ne": "डाटाबेसमा समस्या आयो"
+  },
+  "Document unavailable": {
+    "en": "Document unavailable",
+    "ne": "कागजात उपलब्ध छैन"
+  },
+  "Server error": {
+    "en": "Server error",
+    "ne": "सर्भरमा समस्या आयो"
+  },
+  "Session error": {
+    "en": "Session error",
+    "ne": "प्रवेश सत्रमा समस्या आयो"
+  },
+  "Select a shorter passage and note": {
+    "en": "Select a shorter passage and note",
+    "ne": "छोटो अंश र टिप्पणी छान्नुहोस्"
+  },
+  "Could not save note": {
+    "en": "Could not save note",
+    "ne": "टिप्पणी सुरक्षित गर्न सकिएन"
+  },
+  "Could not remove note": {
+    "en": "Could not remove note",
+    "ne": "टिप्पणी हटाउन सकिएन"
+  },
+  "Could not load notes": {
+    "en": "Could not load notes",
+    "ne": "टिप्पणीहरू ल्याउन सकिएन"
+  },
+  "Could not restore revision": {
+    "en": "Could not restore revision",
+    "ne": "संशोधन पुनर्स्थापना गर्न सकिएन"
+  },
+  "Could not load history": {
+    "en": "Could not load history",
+    "ne": "इतिहास ल्याउन सकिएन"
+  },
+  "Bold": {
+    "en": "Bold",
+    "ne": "बाक्लो"
+  },
+  "Italic": {
+    "en": "Italic",
+    "ne": "छड्के"
+  },
+  "Underline": {
+    "en": "Underline",
+    "ne": "रेखाङ्कित"
+  },
+  "Strike": {
+    "en": "Strike",
+    "ne": "काटिएको"
+  },
+  "Color": {
+    "en": "Color",
+    "ne": "अक्षरको रङ"
+  },
+  "Background": {
+    "en": "Background",
+    "ne": "पृष्ठभूमि"
+  },
+  "Subscript": {
+    "en": "Subscript",
+    "ne": "तलको सानो अक्षर"
+  },
+  "Superscript": {
+    "en": "Superscript",
+    "ne": "माथिको सानो अक्षर"
+  },
+  "Ordered list": {
+    "en": "Ordered list",
+    "ne": "क्रमबद्ध सूची"
+  },
+  "Bullet list": {
+    "en": "Bullet list",
+    "ne": "बुँदागत सूची"
+  },
+  "Checklist": {
+    "en": "Checklist",
+    "ne": "जाँचसूची"
+  },
+  "Decrease indent": {
+    "en": "Decrease indent",
+    "ne": "इन्डेन्ट घटाउनुहोस्"
+  },
+  "Increase indent": {
+    "en": "Increase indent",
+    "ne": "इन्डेन्ट बढाउनुहोस्"
+  },
+  "Align": {
+    "en": "Align",
+    "ne": "पङ्क्ति मिलाउनुहोस्"
+  },
+  "Blockquote": {
+    "en": "Blockquote",
+    "ne": "उद्धरण"
+  },
+  "Code block": {
+    "en": "Code block",
+    "ne": "कोड खण्ड"
+  },
+  "Link": {
+    "en": "Link",
+    "ne": "लिङ्क"
+  },
+  "Image": {
+    "en": "Image",
+    "ne": "तस्वीर"
+  },
+  "Clear formatting": {
+    "en": "Clear formatting",
+    "ne": "स्वरूप हटाउनुहोस्"
+  },
+  "Heading": {
+    "en": "Heading",
+    "ne": "शीर्षक"
+  },
+  "Font": {
+    "en": "Font",
+    "ne": "फन्ट"
+  },
+  "Size": {
+    "en": "Size",
+    "ne": "आकार"
+  },
+  "Normal": {
+    "en": "Normal",
+    "ne": "सामान्य"
+  },
+  "Small": {
+    "en": "Small",
+    "ne": "सानो"
+  },
+  "Large": {
+    "en": "Large",
+    "ne": "ठूलो"
+  },
+  "Huge": {
+    "en": "Huge",
+    "ne": "धेरै ठूलो"
+  }
+}

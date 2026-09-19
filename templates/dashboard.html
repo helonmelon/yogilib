@@ -3,20 +3,20 @@
 
   <div class="dashboard-header">
     <div>
-      <h2>ड्यासबोर्ड</h2>
+      <h2>{{t "ड्यासबोर्ड"}}</h2>
       <p class="dashboard-count">
-        {{len .Documents}} कागजातहरू
+        {{len .Documents}} {{t "कागजातहरू"}}
       </p>
     </div>
     <div class="dashboard-tools">
       {{/* Search */}}
       <form class="dashboard-search" method="GET" action="/dashboard">
         <input type="search" name="q" value="{{.Query}}"
-               placeholder="खोज्नुहोस्…">
+               placeholder="{{t "खोज्नुहोस्…"}}">
         {{if .Category}}<input type="hidden" name="cat" value="{{.Category}}">{{end}}
       </form>
       <a href="/upload" class="btn btn-primary btn-nowrap">
-        + अपलोड
+        {{t "+ अपलोड"}}
       </a>
     </div>
   </div>
@@ -24,7 +24,7 @@
   {{/* Category tabs */}}
   <div class="category-tabs">
     {{range .Categories}}
-    <a href="/dashboard?cat={{.}}" class="{{if eq . $.Category}}active{{end}}">{{.}}</a>
+    <a href="/dashboard?cat={{.}}" class="{{if eq . $.Category}}active{{end}}">{{t .}}</a>
     {{end}}
   </div>
 
@@ -37,22 +37,22 @@
       <span class="card-title-np">{{.TitleNP}}</span>
       {{end}}
       <div class="card-meta">
-        {{if .Category}}<span class="tag">{{.Category}}</span>{{end}}
+        {{if .Category}}<span class="tag">{{t .Category}}</span>{{end}}
         <span>{{.CreatedAt}}</span>
       </div>
       {{if .Description}}
       <p class="card-description">{{.Description}}</p>
       {{end}}
       <div class="card-actions">
-        <a href="/document/{{.ID}}">हेर्नुहोस्</a>
-        <a href="/document/{{.ID}}/edit">सम्पादन</a>
+        <a href="/document/{{.ID}}">{{t "हेर्नुहोस्"}}</a>
+        <a href="/document/{{.ID}}/edit">{{t "सम्पादन"}}</a>
       </div>
     </div>
     {{end}}
   </div>
   {{else}}
   <p class="empty-state empty-state-spacious">
-    कुनै कागजात भेटिएन। <a href="/upload">अपलोड गर्नुहोस् →</a>
+    {{t "कुनै कागजात भेटिएन।"}} <a href="/upload">{{t "अपलोड गर्नुहोस् →"}}</a>
   </p>
   {{end}}
 

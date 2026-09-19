@@ -141,3 +141,26 @@ Both Preeti and ITRANS converters output Devanagari digits:
 | 7 | ७ |
 | 8 | ८ |
 | 9 | ९ |
+
+## Website interface language
+
+Every page has an **Interface language / वेबसाइटको भाषा** control. Choose
+**English** or **नेपाली** and press **Apply / लागू गर्नुहोस्**. English is the
+initial default. A first-party cookie remembers the choice in that browser for
+one year, including after sign-out. Another browser or device makes its own choice.
+
+This changes navigation, the signed-in account panel, forms, category labels,
+reader controls, and action messages. It does not translate document titles,
+authors, descriptions, body text, excerpts, uploaded originals, or user notes.
+Static archive/biographical prose also retains its original language.
+Document language and script fields describe the source material independently
+of the interface preference; their stored values never change with this switch.
+
+`ui-translations.json` contains explicit English/Nepali UI strings. `locale.go`
+embeds it and provides the `t` template function and the `/language` preference
+handler. JavaScript controls use `window.yogilibT` from the same catalog. Add UI
+strings explicitly; never apply automatic translation to rendered archive text.
+Run the app with `go run .` so the locale module is included.
+
+Changing language reloads the current page and keeps search/filter parameters.
+The browser asks before switching if there is an unsaved form draft.
