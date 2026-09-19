@@ -5,7 +5,6 @@
    Font: Himalaya for Devanagari headings (local woff2)
 ------------------------------------------------------- */
 
-@import url('https://fonts.googleapis.com/css2?family=Labrada:ital,wght@0,400;0,600;1,400&family=Hind:wght@400;600&display=swap');
 
 @font-face {
   font-family: 'Himalaya';
@@ -13,6 +12,7 @@
        url('/static/fonts/himalaya-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 /* --- Reset & base ---------------------------------------- */
@@ -1036,3 +1036,97 @@ html[lang="ne"] .ql-snow .ql-tooltip::before { content: 'लिङ्क:'; }
 html[lang="ne"] .ql-snow .ql-tooltip a.ql-action::after { content: 'सम्पादन'; }
 html[lang="ne"] .ql-snow .ql-tooltip.ql-editing a.ql-action::after { content: 'सुरक्षित गर्नुहोस्'; }
 html[lang="ne"] .ql-snow .ql-tooltip a.ql-remove::before { content: 'हटाउनुहोस्'; }
+
+
+/* Quiet archive masthead: existing fonts, native controls, no extra assets. */
+.language-bar {
+  background: #f6f4ef;
+  border-bottom: 1px solid #e8e4db;
+  padding: .55rem max(1.25rem, calc((100vw - 1060px) / 2));
+}
+.language-form {
+  gap: .65rem;
+  font-family: 'Hind', system-ui, sans-serif;
+  font-size: .82rem;
+}
+.language-form label { color: #686d62; margin-right: .2rem; }
+.language-form select, .language-form button {
+  min-height: 36px;
+  border-radius: 7px;
+  font-size: .86rem;
+  line-height: 1.3;
+}
+.language-form select { border-color: #d4d9ce; padding: .4rem .7rem; }
+.language-form button {
+  border-color: transparent;
+  background: #e7ecdf;
+  padding: .4rem .9rem;
+}
+.language-form button:hover { background: #dce4d2; }
+.admin-bar {
+  padding: .7rem max(1.25rem, calc((100vw - 1060px) / 2));
+  background: #344332;
+  justify-content: space-between;
+  gap: .6rem 1.5rem;
+  font-family: 'Hind', system-ui, sans-serif;
+  font-size: .84rem;
+  text-align: left;
+}
+.account-identity { display: flex; flex-wrap: wrap; align-items: baseline; gap: .15rem .65rem; min-width: 0; }
+.account-label { color: #c4cebf; font-size: .76rem; }
+.account-identity strong { color: #f5f5ed; font-weight: 600; }
+.account-actions { display: flex; align-items: center; gap: .3rem; flex-wrap: wrap; }
+.admin-bar a, .admin-bar-button {
+  display: inline-flex; align-items: center; min-height: 36px;
+  padding: .35rem .7rem; border-radius: 6px;
+  color: #edf0e8; text-decoration: none; line-height: 1.3;
+}
+.admin-bar a:hover, .admin-bar-button:hover { background: #465541; color: #fff; }
+.admin-bar-form { border-left: 1px solid #62715b; margin-left: .3rem; padding-left: .3rem; }
+.site-header { padding: 2rem 1rem 1rem; gap: .65rem; }
+.site-header img {
+  display: block; width: 144px; height: 144px; margin: 0;
+  border: 3px solid #cb8141; padding: 4px; background: #fffaf1;
+}
+.photo-link { transition: transform .15s ease; }
+.photo-link:hover { transform: translateY(-2px); box-shadow: none; }
+.site-wordmark {
+  display: flex; flex-direction: column; gap: .12rem;
+  text-decoration: none; color: #344332;
+  font-size: 1.8rem; line-height: 1.2; font-weight: 600; letter-spacing: -.035em;
+}
+.site-wordmark:hover { color: #344332; }
+.site-wordmark span { font-family: 'Hind', sans-serif; font-weight: 400; font-size: .88rem; letter-spacing: 0; color: #797064; }
+.site-nav {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: .35rem; padding: .5rem 0 1.25rem;
+  border-bottom: 1px solid #e6e5dd; margin-bottom: 1.75rem;
+}
+.site-nav a {
+  margin: 0; padding: .5rem 1.15rem; min-height: 42px;
+  border: 1px solid transparent; border-radius: 7px; outline: none;
+  color: #485242; font-family: 'Hind', system-ui, sans-serif;
+  font-size: .95rem; line-height: 1.5;
+}
+.site-nav a:hover, .site-nav a.active, .site-nav a[aria-current="page"] { background: #f0f1e9; color: #263b28; outline: none; }
+.site-nav a.contribute { border-color: #d4dccb; background: #f7f8f2; }
+.site-nav a.contribute:hover, .site-nav a.contribute[aria-current="page"] { background: #e8edde; color: #263b28; }
+.site-nav a:focus-visible, .site-header a:focus-visible { outline: 2px solid #866035; outline-offset: 4px; }
+.admin-bar a:focus-visible, .admin-bar-button:focus-visible { outline: 2px solid #f1cf93; outline-offset: 2px; }
+@media (max-width: 600px) {
+  .language-bar { padding: .5rem 1rem; }
+  .language-form { justify-content: center; gap: .4rem; }
+  .language-form label { font-size: .78rem; }
+  .admin-bar { padding: .65rem 1rem; justify-content: center; gap: .3rem; }
+  .account-identity { justify-content: center; flex-basis: 100%; }
+  .account-actions { justify-content: center; }
+  .site-header { padding-top: 1.5rem; }
+  .site-header img { width: 116px; height: 116px; }
+  .site-wordmark { font-size: 1.6rem; }
+  .site-nav { padding-bottom: 1rem; margin-bottom: 1.25rem; }
+  .site-nav a { padding: .5rem .9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .photo-link { transition: none; }
+  .photo-link:hover { transform: none; }
+}

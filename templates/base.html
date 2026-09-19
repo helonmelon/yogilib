@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Labrada:ital,wght@0,400;0,600;1,400&family=Hind:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=interface-1">
+  <link rel="stylesheet" href="/static/css/style.css?v=header-2">
   <script>window.yogilibMessages = {{uiMessages}}; window.yogilibT = key => window.yogilibMessages[key] || key;</script>
   <script src="/static/js/interface.js?v=interface-1" defer></script>
   {{if .DevReload}}<script src="/static/js/dev-reload.js" defer></script>{{end}}
@@ -28,25 +28,28 @@
   {{/* Admin bar — shown only when user is logged in. */}}
   {{if .User}}
   <div class="admin-bar">
-    <span class="account-identity">{{t "Signed in as"}} <strong>{{.User.Email}}</strong></span>
+    <span class="account-identity"><span class="account-label">{{t "Signed in as"}}</span><strong>{{.User.Email}}</strong></span>
+    <div class="account-actions">
     {{if eq .User.Role "admin"}}<a href="/dashboard">{{t "ड्यासबोर्ड"}}</a>{{end}}
     {{if or (eq .User.Role "admin") (eq .User.Role "uploader")}}<a href="/upload">{{t "अपलोड"}}</a>{{end}}
     <form class="admin-bar-form" method="POST" action="/logout">
       <button class="admin-bar-button" type="submit">{{t "बाहिर"}}</button>
     </form>
+    </div>
   </div>
   {{end}}
 
   <div class="container">
 
     <header class="site-header">
-      <a href="/" class="photo-link"><img src="/static/imgs/yogipp.jpeg" alt="Yogi Narharinath"></a>
+      <a href="/" class="photo-link"><img src="/static/imgs/yogipp.jpeg" alt="Yogi Narharinath" width="144" height="144"></a>
+      <a class="site-wordmark" href="/">Yogilib<span lang="ne">योगी नरहरिनाथ</span></a>
     </header>
 
     <nav class="site-nav">
-      <a href="/about">{{t "बारेमा"}}</a>
-      <a href="/works">{{t "ग्रन्थावली"}}</a>
-      <a href="/upload" class="contribute">{{t "योगदान"}}</a>
+      <a href="/about" {{if eq .ReturnTo "/about"}}aria-current="page"{{end}}>{{t "बारेमा"}}</a>
+      <a href="/works" {{if eq .ReturnTo "/works"}}aria-current="page"{{end}}>{{t "ग्रन्थावली"}}</a>
+      <a href="/upload" class="contribute" {{if eq .ReturnTo "/upload"}}aria-current="page"{{end}}>{{t "योगदान"}}</a>
     </nav>
 
     <main>
