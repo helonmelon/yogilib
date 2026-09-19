@@ -10,8 +10,8 @@
     return r.status===204 || method!=='GET' ? null : r.json();
   }
   const settings = ['size','spacing','width'];
-  let saved={}; try {saved=JSON.parse(localStorage.getItem('yogilib-reader')||'{}');} catch {}
-  settings.forEach(key=>{const input=$('reader-'+key); if(saved[key]) input.value=saved[key]; const update=()=>{root.style.setProperty('--reader-'+key,input.value+(key==='size'?'px':''));saved[key]=input.value;try{localStorage.setItem('yogilib-reader',JSON.stringify(saved));}catch{}};input.addEventListener('input',update);update();});
+  let saved={}; try {saved=JSON.parse(localStorage.getItem('yogilib-reader-v2')||'{}');} catch {}
+  settings.forEach(key=>{const input=$('reader-'+key); if(saved[key]) input.value=saved[key]; const update=()=>{root.style.setProperty('--reader-'+key,input.value+(key==='size'?'px':''));saved[key]=input.value;try{localStorage.setItem('yogilib-reader-v2',JSON.stringify(saved));}catch{}};input.addEventListener('input',update);update();});
   if(body) {
     const counts=new Map();
     body.querySelectorAll('h1,h2,h3,h4,p,li').forEach(el=>{

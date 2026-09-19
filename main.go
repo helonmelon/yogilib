@@ -86,6 +86,7 @@ type PageData struct {
 	User       *User // nil when not logged in
 	DevReload  bool
 	ReturnTo   string
+	PageClass  string
 }
 
 // ---------------------------------------------------------------------------
@@ -572,6 +573,7 @@ func requireRole(role string, next http.HandlerFunc) http.HandlerFunc {
 
 func render(w http.ResponseWriter, r *http.Request, page string, data PageData) {
 	data.ReturnTo = r.URL.RequestURI()
+	data.PageClass = "page-" + page
 	data.DevReload = os.Getenv("DEV_RELOAD") == "1"
 	if data.User == nil {
 		data.User = sessionUser(r)

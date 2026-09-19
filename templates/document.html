@@ -1,7 +1,17 @@
 {{define "content"}}
-<link rel="stylesheet" href="/static/css/reader.css">
+<link rel="stylesheet" href="/static/css/reader.css?v=reader-layout-1">
 <div class="document-page" id="reader" data-document="{{.Doc.ID}}" data-signed-in="{{if .User}}yes{{end}}">
   {{if .Doc}}
+
+  <div class="reader-layout">
+    <aside class="reader-sidebar reader-contents">
+      <details open>
+        <summary>{{t "Table of contents"}}</summary>
+        <nav id="reader-toc" aria-label="{{t "Table of contents"}}"></nav>
+      </details>
+    </aside>
+
+    <div class="reader-main">
 
   <div class="doc-viewer-header">
     <!-- Category + upload date + edit link -->
@@ -48,17 +58,7 @@
     {{if .Doc.Description}}<p class="doc-description">{{.Doc.Description}}</p>{{end}}
   </div>
 
-  <section class="reader-tools" aria-label="{{t "Reading tools"}}">
-    <details><summary>{{t "Reading settings · पढ्ने सुविधा"}}</summary>
-      <label>{{t "Font size"}} <input id="reader-size" type="range" min="16" max="36" value="20"></label>
-      <label>{{t "Line spacing"}} <input id="reader-spacing" type="range" min="1.4" max="2.6" step="0.1" value="1.9"></label>
-      <label>{{t "Page width"}} <select id="reader-width"><option value="640px">{{t "Narrow"}}</option><option value="800px" selected>{{t "Comfortable"}}</option><option value="100%">{{t "Wide"}}</option></select></label>
-    </details>
-    <form id="reader-search" role="search"><label>{{t "Find in document"}} <input id="reader-query" type="search" maxlength="200"></label><button>{{t "Find"}}</button><button type="button" id="search-prev" aria-label="{{t "Previous match"}}">↑</button><button type="button" id="search-next" aria-label="{{t "Next match"}}">↓</button><output id="search-count" aria-live="polite"></output></form>
-    {{if .Doc.FilePath}}<button id="reader-split" type="button" aria-pressed="false">{{t "Original + transcription"}}</button>{{end}}
-  </section>
   <div id="reader-status" role="status" aria-live="polite"></div>
-  <nav id="reader-toc" aria-label="{{t "Table of contents"}}"></nav>
   <div class="reader-columns">
   {{if .Doc.BodyHTML}}
   <article class="doc-body" id="reader-body">
@@ -89,10 +89,29 @@
   {{else}}<p><a href="/login">{{t "Sign in"}}</a> {{t "to save private highlights and notes."}}</p>{{end}}
   </section>
   {{if .User}}{{if eq .User.Role "admin"}}<details id="reader-history"><summary>{{t "Revision history"}}</summary><p>{{t "History begins with edits made after this feature was added. Restoring also saves the current version."}}</p><div id="history-list"></div></details>{{end}}{{end}}
+    </div>
+
+    <aside class="reader-sidebar reader-appearance">
+      <section class="reader-tools" aria-label="{{t "Reading tools"}}">
+        <h2>{{t "Reading tools"}}</h2>
+        <details open><summary>{{t "Reading settings · पढ्ने सुविधा"}}</summary>
+          <label>{{t "Font size"}} <input id="reader-size" type="range" min="16" max="36" value="20"></label>
+          <label>{{t "Line spacing"}} <input id="reader-spacing" type="range" min="1.4" max="2.6" step="0.1" value="1.9"></label>
+          <label>{{t "Page width"}} <select id="reader-width"><option value="640px">{{t "Narrow"}}</option><option value="800px">{{t "Comfortable"}}</option><option value="100%" selected>{{t "Wide"}}</option></select></label>
+        </details>
+        <form id="reader-search" role="search">
+          <label>{{t "Find in document"}} <input id="reader-query" type="search" maxlength="200"></label>
+          <div class="reader-search-actions"><button>{{t "Find"}}</button><button type="button" id="search-prev" aria-label="{{t "Previous match"}}">↑</button><button type="button" id="search-next" aria-label="{{t "Next match"}}">↓</button></div>
+          <output id="search-count" aria-live="polite"></output>
+        </form>
+        {{if .Doc.FilePath}}<button id="reader-split" type="button" aria-pressed="false">{{t "Original + transcription"}}</button>{{end}}
+      </section>
+    </aside>
+  </div>
 
   {{else}}
   <p class="empty-state empty-state-spacious">{{t "कागजात भेटिएन।"}}</p>
   {{end}}
 </div>
-<script src="/static/js/reader.js?v=interface-1" defer></script>
+<script src="/static/js/reader.js?v=reader-layout-1" defer></script>
 {{end}}
