@@ -43,12 +43,11 @@
 
     <header class="site-header">
       <a href="/" class="photo-link"><img src="/static/imgs/yogipp.jpeg" alt="Yogi Narharinath" width="144" height="144"></a>
-      <a class="site-wordmark" href="/">Yogilib<span lang="ne">योगी नरहरिनाथ</span></a>
+      <a class="site-wordmark" href="/">Yogilib</a>
     </header>
 
     <nav class="site-nav">
       <a href="/about" {{if eq .ReturnTo "/about"}}aria-current="page"{{end}}>{{t "बारेमा"}}</a>
-      <a href="/works" {{if eq .ReturnTo "/works"}}aria-current="page"{{end}}>{{t "ग्रन्थावली"}}</a>
       <a href="/upload" class="contribute" {{if eq .ReturnTo "/upload"}}aria-current="page"{{end}}>{{t "योगदान"}}</a>
     </nav>
 
