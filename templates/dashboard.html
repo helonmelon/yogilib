@@ -5,7 +5,7 @@
     <div>
       <h2>{{t "ड्यासबोर्ड"}}</h2>
       <p class="dashboard-count">
-        {{len .Documents}} {{t "कागजातहरू"}}
+        {{len .Documents}} {{if eq (len .Documents) 1}}{{t "कागजात (Document)"}}{{else}}{{t "कागजातहरू"}}{{end}}
       </p>
     </div>
     <div class="dashboard-tools">
