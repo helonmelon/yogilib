@@ -79,8 +79,8 @@ The site is **publicly readable** — no login needed to browse documents, excer
 | Role | Access |
 |---|---|
 | *(public)* | All reading pages — home, documents, excerpts, about, works, store |
-| `uploader` | Everything public + `/upload` |
-| `admin` | Everything above + `/dashboard`, `/document/{id}/edit` |
+| `uploader` | Everything public + `/upload`; may delete documents they uploaded |
+| `admin` | Everything above + `/dashboard`, `/document/{id}/edit`; may delete any document |
 
 ### Seeded accounts (development only)
 

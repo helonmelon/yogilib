@@ -67,6 +67,28 @@ func TestStripHTMLCollapsesTextForSearch(t *testing.T) {
 	}
 }
 
+func TestDocumentDeletePermissions(t *testing.T) {
+	doc := &Document{UploadedBy: 42}
+	tests := []struct {
+		name string
+		user *User
+		want bool
+	}{
+		{name: "anonymous", user: nil, want: false},
+		{name: "viewer who owns id", user: &User{ID: 42, Role: "viewer"}, want: false},
+		{name: "uploader owns document", user: &User{ID: 42, Role: "uploader"}, want: true},
+		{name: "uploader does not own document", user: &User{ID: 7, Role: "uploader"}, want: false},
+		{name: "admin does not need ownership", user: &User{ID: 7, Role: "admin"}, want: true},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := canDeleteDocument(tc.user, doc); got != tc.want {
+				t.Fatalf("canDeleteDocument() = %v, want %v", got, tc.want)
+			}
+		})
+	}
+}
+
 func TestUploaderCanCreateDocument(t *testing.T) {
 	setupTestDB(t)
 

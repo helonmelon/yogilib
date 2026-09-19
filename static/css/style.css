@@ -589,6 +589,23 @@ main { padding-bottom: 3rem; }
   outline-color: var(--hover-blue);
 }
 
+.delete-form { display: inline-flex; margin: 0; }
+.delete-button {
+  appearance: none;
+  border: 1px solid #cbb3ad;
+  border-radius: 4px;
+  background: #fff;
+  color: #8a2f27;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  padding: 2px 8px;
+}
+.delete-button:hover { background: #8a2f27; border-color: #8a2f27; color: #fff; }
+.delete-button:focus-visible { outline: 2px solid #8a2f27; outline-offset: 2px; }
+.doc-delete-inline { margin-left: auto; }
+
 .doc-subtitle {
   color: #555;
   font-family: 'Hind', sans-serif;

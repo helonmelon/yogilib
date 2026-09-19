@@ -1066,5 +1066,21 @@
   "Huge": {
     "en": "Huge",
     "ne": "धेरै ठूलो"
+  },
+  "Delete": {
+    "en": "Delete",
+    "ne": "मेटाउनुहोस्"
+  },
+  "Delete this document permanently? This cannot be undone.": {
+    "en": "Delete this document permanently? This cannot be undone.",
+    "ne": "यो कागजात स्थायी रूपमा मेटाउने? यसलाई पछि फर्काउन सकिँदैन।"
+  },
+  "You can only delete documents you uploaded.": {
+    "en": "You can only delete documents you uploaded.",
+    "ne": "तपाईंले अपलोड गरेका कागजातहरू मात्र मेटाउन सक्नुहुन्छ।"
+  },
+  "Could not delete document": {
+    "en": "Could not delete document",
+    "ne": "कागजात मेटाउन सकिएन"
   }
 }

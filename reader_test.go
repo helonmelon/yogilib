@@ -107,3 +107,31 @@ func TestReaderTemplateRoles(t *testing.T) {
 		}
 	}
 }
+
+func TestDeleteControlVisibility(t *testing.T) {
+	tests := []struct {
+		name       string
+		user       *User
+		uploadedBy int
+		wantDelete bool
+	}{
+		{name: "anonymous", wantDelete: false},
+		{name: "owner", user: &User{ID: 8, Role: "uploader"}, uploadedBy: 8, wantDelete: true},
+		{name: "other uploader", user: &User{ID: 9, Role: "uploader"}, uploadedBy: 8, wantDelete: false},
+		{name: "admin", user: &User{ID: 1, Role: "admin"}, uploadedBy: 8, wantDelete: true},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			w := httptest.NewRecorder()
+			r := httptest.NewRequest("GET", "/document/1", nil)
+			render(w, r, "document", PageData{
+				Doc:  &Document{ID: "1", Title: "Test", UploadedBy: tc.uploadedBy},
+				User: tc.user,
+			})
+			hasDelete := strings.Contains(w.Body.String(), `action="/document/1/delete"`)
+			if hasDelete != tc.wantDelete {
+				t.Fatalf("delete control visibility = %v, want %v", hasDelete, tc.wantDelete)
+			}
+		})
+	}
+}

@@ -10,9 +10,14 @@
       {{if .Doc.Lang}}<span class="tag tag-lang">{{.Doc.Lang}}</span>{{end}}
       {{if .Doc.Script}}<span class="tag tag-script">{{.Doc.Script}}</span>{{end}}
       <span class="doc-added-date">{{t "थपिएको:"}} {{.Doc.CreatedAt}}</span>
-      {{if .User}}{{if eq .User.Role "admin"}}
+      {{if .Doc.CanEdit}}
       <a class="doc-edit-button" href="/document/{{.Doc.ID}}/edit">{{t "सम्पादन"}}</a>
-      {{end}}{{end}}
+      {{end}}
+      {{if .Doc.CanDelete}}
+      <form class="delete-form" method="POST" action="/document/{{.Doc.ID}}/delete" data-confirm="{{t "Delete this document permanently? This cannot be undone."}}">
+        <button class="delete-button" type="submit">{{t "Delete"}}</button>
+      </form>
+      {{end}}
     </div>
 
     <!-- Titles -->

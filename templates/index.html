@@ -28,7 +28,12 @@
         {{if .Category}}<span class="tag">{{t .Category}}</span>{{end}}
         {{if .Description}}<span>{{.Description}}</span>{{end}}
         <span>{{.CreatedAt}}</span>
-        <a class="doc-edit-link" href="/document/{{.ID}}/edit">{{t "सम्पादन"}}</a>
+        {{if .CanEdit}}<a class="doc-edit-link" href="/document/{{.ID}}/edit">{{t "सम्पादन"}}</a>{{end}}
+        {{if .CanDelete}}
+        <form class="delete-form doc-delete-inline" method="POST" action="/document/{{.ID}}/delete" data-confirm="{{t "Delete this document permanently? This cannot be undone."}}">
+          <button class="delete-button" type="submit">{{t "Delete"}}</button>
+        </form>
+        {{end}}
       </div>
     </li>
     {{end}}

@@ -46,6 +46,8 @@ type Document struct {
 	FilePath     string
 	UploadedBy   int
 	CreatedAt    string
+	CanEdit      bool
+	CanDelete    bool
 }
 
 type Excerpt struct {
@@ -98,6 +100,13 @@ var roleLevel = map[string]int{
 
 func hasRole(userRole, required string) bool {
 	return roleLevel[userRole] >= roleLevel[required]
+}
+
+func canDeleteDocument(user *User, doc *Document) bool {
+	if user == nil || doc == nil {
+		return false
+	}
+	return user.Role == "admin" || (user.Role == "uploader" && doc.UploadedBy == user.ID)
 }
 
 // ---------------------------------------------------------------------------
@@ -567,6 +576,14 @@ func render(w http.ResponseWriter, r *http.Request, page string, data PageData) 
 	if data.User == nil {
 		data.User = sessionUser(r)
 	}
+	if data.Doc != nil {
+		data.Doc.CanEdit = data.User != nil && data.User.Role == "admin"
+		data.Doc.CanDelete = canDeleteDocument(data.User, data.Doc)
+	}
+	for i := range data.Documents {
+		data.Documents[i].CanEdit = data.User != nil && data.User.Role == "admin"
+		data.Documents[i].CanDelete = canDeleteDocument(data.User, &data.Documents[i])
+	}
 	t, err := localizedTemplate(interfaceLanguage(r),
 		"templates/base.html",
 		"templates/"+page+".html",
@@ -825,6 +842,61 @@ func uploadPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/document/"+strconv.FormatInt(id, 10), http.StatusSeeOther)
+}
+
+func documentDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	if !sameOrigin(w, r) {
+		return
+	}
+	u := sessionUser(r)
+	doc := getDocumentByID(r.PathValue("id"))
+	if doc == nil {
+		http.NotFound(w, r)
+		return
+	}
+	if !canDeleteDocument(u, doc) {
+		http.Error(w, translateUI(interfaceLanguage(r), "You can only delete documents you uploaded."), http.StatusForbidden)
+		return
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		http.Error(w, translateUI(interfaceLanguage(r), "Database error"), http.StatusInternalServerError)
+		return
+	}
+	defer tx.Rollback()
+	if _, err = tx.Exec(`DELETE FROM document_notes WHERE document_id=$1`, doc.ID); err == nil {
+		_, err = tx.Exec(`DELETE FROM document_revisions WHERE document_id=$1`, doc.ID)
+	}
+	if err == nil {
+		var result sql.Result
+		result, err = tx.Exec(`DELETE FROM documents WHERE id=$1`, doc.ID)
+		if err == nil {
+			if affected, rowsErr := result.RowsAffected(); rowsErr != nil || affected != 1 {
+				err = fmt.Errorf("delete document affected %d rows: %v", affected, rowsErr)
+			}
+		}
+	}
+	if err == nil {
+		err = tx.Commit()
+	}
+	if err != nil {
+		log.Println("documentDelete:", err)
+		http.Error(w, translateUI(interfaceLanguage(r), "Could not delete document"), http.StatusInternalServerError)
+		return
+	}
+
+	// Attachments are only removed when they resolve inside the local upload directory.
+	if doc.FilePath != "" {
+		uploadRoot := filepath.Clean(filepath.Join("static", "docs"))
+		localPath := filepath.Clean(strings.TrimPrefix(doc.FilePath, "/"))
+		if relative, relErr := filepath.Rel(uploadRoot, localPath); relErr == nil && relative != "." && !strings.HasPrefix(relative, ".."+string(filepath.Separator)) && relative != ".." {
+			if removeErr := os.Remove(localPath); removeErr != nil && !os.IsNotExist(removeErr) {
+				log.Println("remove deleted document attachment:", removeErr)
+			}
+		}
+	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func missionHandler(w http.ResponseWriter, r *http.Request) {
@@ -1088,6 +1160,7 @@ func main() {
 	// Uploader+ only
 	mux.HandleFunc("GET /upload", requireRole("uploader", uploadGetHandler))
 	mux.HandleFunc("POST /upload", requireRole("uploader", uploadPostHandler))
+	mux.HandleFunc("POST /document/{id}/delete", requireRole("uploader", documentDeleteHandler))
 
 	// Admin only
 	mux.HandleFunc("GET /dashboard", requireRole("admin", dashboardHandler))

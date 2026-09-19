@@ -22,3 +22,9 @@ document.querySelectorAll('.ql-toolbar button, .ql-toolbar .ql-picker').forEach(
   if (control.classList.contains('ql-indent')) key = control.value === '-1' ? 'Decrease indent' : 'Increase indent';
   if (key) { control.setAttribute('aria-label',window.yogilibT(key)); control.setAttribute('title',window.yogilibT(key)); }
 });
+
+document.querySelectorAll('.delete-form').forEach(form => {
+  form.addEventListener('submit', event => {
+    if (!confirm(form.dataset.confirm)) event.preventDefault();
+  });
+});

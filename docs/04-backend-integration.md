@@ -115,6 +115,12 @@ Development seed users are created on the first run only:
 
 `uploadPostHandler` reads the current session user and stores `uploaded_by` with the inserted document. `documentHandler` does not yet join to `users` to display the contributor.
 
+`documentDeleteHandler` permits admins to delete any document and uploaders to
+delete only documents whose `uploaded_by` value matches their account. It also
+removes the document's private notes, revision history, and local attachment.
+The handler repeats this authorization on the server and requires a same-origin
+POST; hiding a button is never treated as authorization.
+
 Original author (`orig_author`, `orig_author_np`) is a separate field for the historical author of the document, such as `Yogi Narharinath / योगी नरहरिनाथ`.
 
 ## Search
