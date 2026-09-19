@@ -309,9 +309,9 @@
     max-width: none;
   }
 
-  .reader-contents { order: 1; }
-  .reader-main { order: 2; }
-  .reader-appearance { order: 0; }
+  .reader-contents { order: 0; }
+  .reader-main { order: 1; }
+  .reader-appearance { order: 2; }
   .reader-sidebar > details, .reader-tools { position: static; }
 
   .reader-contents > details {
