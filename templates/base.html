@@ -7,24 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Labrada:ital,wght@0,400;0,600;1,400&family=Hind:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=reader-layout-1">
+  <link rel="stylesheet" href="/static/css/style.css?v=masthead-1">
   <script>window.yogilibMessages = {{uiMessages}}; window.yogilibT = key => window.yogilibMessages[key] || key;</script>
   <script src="/static/js/interface.js?v=delete-1" defer></script>
   {{if .DevReload}}<script src="/static/js/dev-reload.js" defer></script>{{end}}
 </head>
 <body class="{{.PageClass}}">
-  <div class="language-bar">
-    <form action="/language" method="POST" id="language-form" class="language-form">
-      <label for="interface-language">{{t "Interface language"}}</label>
-      <input type="hidden" name="return_to" value="{{.ReturnTo}}">
-      <select id="interface-language" name="language">
-        <option value="en" lang="en" {{if eq uiLanguage "en"}}selected{{end}}>English</option>
-        <option value="ne" lang="ne" {{if eq uiLanguage "ne"}}selected{{end}}>नेपाली</option>
-      </select>
-      <button type="submit">{{t "Apply"}}</button>
-    </form>
-  </div>
-
   {{/* Admin bar — shown only when user is logged in. */}}
   {{if .User}}
   <div class="admin-bar">
@@ -40,16 +28,29 @@
   {{end}}
 
   <div class="container">
+    <div class="site-masthead">
+      <header class="site-header">
+        <a href="/" class="photo-link"><img src="/static/imgs/yogipp.jpeg" alt="Yogi Narharinath" width="52" height="52"></a>
+        <a class="site-wordmark" href="/">Yogilib</a>
+      </header>
 
-    <header class="site-header">
-      <a href="/" class="photo-link"><img src="/static/imgs/yogipp.jpeg" alt="Yogi Narharinath" width="144" height="144"></a>
-      <a class="site-wordmark" href="/">Yogilib</a>
-    </header>
-
-    <nav class="site-nav">
-      <a href="/about" {{if eq .ReturnTo "/about"}}aria-current="page"{{end}}>{{t "बारेमा"}}</a>
-      <a href="/upload" class="contribute" {{if eq .ReturnTo "/upload"}}aria-current="page"{{end}}>{{t "योगदान"}}</a>
-    </nav>
+      <div class="masthead-actions">
+        {{if not .User}}{{if ne .PageClass "page-login"}}
+        <nav class="site-nav" aria-label="Account">
+          <a href="/login" class="login-link">{{t "Login"}}</a>
+        </nav>
+        {{end}}{{end}}
+        <form action="/language" method="POST" id="language-form" class="language-form">
+          <label for="interface-language">{{t "Interface language"}}</label>
+          <input type="hidden" name="return_to" value="{{.ReturnTo}}">
+          <select id="interface-language" name="language">
+            <option value="en" lang="en" {{if eq uiLanguage "en"}}selected{{end}}>English</option>
+            <option value="ne" lang="ne" {{if eq uiLanguage "ne"}}selected{{end}}>नेपाली</option>
+          </select>
+          <button type="submit">{{t "Apply"}}</button>
+        </form>
+      </div>
+    </div>
 
     <main>
       {{template "content" .}}

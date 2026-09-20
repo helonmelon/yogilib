@@ -78,7 +78,7 @@ type Excerpt struct {
 
 | Method | Route | Handler | Auth |
 |--------|-------|---------|------|
-| GET | `/` | `indexHandler` | Public |
+| GET | `/` | `indexHandler` | Login required; anonymous visitors redirect to `/login` |
 | GET | `/about` | `aboutHandler` | Public |
 | GET | `/works` | `worksHandler` | Public |
 | GET | `/document/{id}` | `documentHandler` | Public |

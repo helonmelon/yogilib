@@ -4,27 +4,7 @@
   padding-inline: clamp(.85rem, 2vw, 2rem);
 }
 
-.page-document .site-header {
-  flex-direction: row;
-  justify-content: flex-start;
-  gap: .65rem;
-  padding: .7rem 0 .35rem;
-}
-
-.page-document .site-header img {
-  width: 46px;
-  height: 46px;
-  padding: 2px;
-  border-width: 2px;
-}
-
-.page-document .site-wordmark { font-size: 1.35rem; }
-
-.page-document .site-nav {
-  justify-content: flex-start;
-  margin: 0 0 .8rem;
-  padding: 0 0 .55rem 3.5rem;
-}
+.page-document .site-masthead { margin-bottom: .8rem; }
 
 .page-document main { padding-bottom: 1.5rem; }
 
@@ -298,8 +278,6 @@
 
 @media (max-width: 760px) {
   .page-document > .container { padding-inline: .85rem; }
-  .page-document .site-header { padding-top: .6rem; }
-  .page-document .site-nav { padding-left: 0; }
 
   .reader-layout {
     display: flex;

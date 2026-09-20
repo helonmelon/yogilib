@@ -64,7 +64,7 @@ go run .
 
 | Route | Handler | Backing behavior |
 |-------|---------|------------------|
-| `GET /` | `indexHandler` | `queryDocuments(q, cat)` reads Neon Postgres |
+| `GET /` | `indexHandler` | redirects anonymous visitors to login, then `queryDocuments(q, cat)` reads Neon Postgres |
 | `GET /document/{id}` | `documentHandler` | `getDocumentByID(id)` reads Neon Postgres |
 | `GET /document/{id}/edit` | `editGetHandler` | admin-gated document edit form |
 | `POST /document/{id}/edit` | `editPostHandler` | admin-gated Postgres update |

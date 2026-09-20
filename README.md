@@ -72,13 +72,13 @@ Browser -> net/http Mux -> Auth Middleware -> Handler -> html/template -> HTML
 
 ## Authentication & access tiers
 
-The site is **publicly readable** — no login needed to browse documents, excerpts, or any reading page. Login is only required to contribute or administrate.
+The homepage starts at the login screen. Direct document and reading links remain publicly readable; signed-in users enter the archive index from `/`.
 
 ### Roles
 
 | Role | Access |
 |---|---|
-| *(public)* | All reading pages — home, documents, excerpts, about, works, store |
+| *(public)* | Direct document and reading pages; `/` redirects to login |
 | `uploader` | Everything public + `/upload`; may delete documents they uploaded |
 | `admin` | Everything above + `/dashboard`, `/document/{id}/edit`; may delete any document |
 

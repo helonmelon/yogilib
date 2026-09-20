@@ -620,6 +620,10 @@ func devVersionHandler(w http.ResponseWriter, r *http.Request) {
 // ---------------------------------------------------------------------------
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	if sessionUser(r) == nil {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
 	q := r.URL.Query().Get("q")
 	cat := r.URL.Query().Get("cat")
 	render(w, r, "index", PageData{
@@ -915,7 +919,7 @@ func storeHandler(w http.ResponseWriter, r *http.Request) {
 
 func loginGetHandler(w http.ResponseWriter, r *http.Request) {
 	if sessionUser(r) != nil {
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 	render(w, r, "login", PageData{Title: "Login"})
@@ -945,7 +949,7 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	setSessionCookie(w, token)
-	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {

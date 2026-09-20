@@ -60,6 +60,37 @@ func TestRequireRoleRedirectsAnonymousUsers(t *testing.T) {
 	}
 }
 
+func TestIndexRedirectsAnonymousUsersToLogin(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+
+	indexHandler(rec, req)
+
+	if rec.Code != http.StatusSeeOther {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusSeeOther)
+	}
+	if got := rec.Header().Get("Location"); got != "/login" {
+		t.Fatalf("Location = %q, want /login", got)
+	}
+}
+
+func TestPublicMastheadUsesLoginAction(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/about", nil)
+	rec := httptest.NewRecorder()
+
+	aboutHandler(rec, req)
+
+	body := rec.Body.String()
+	if !strings.Contains(body, `class="login-link"`) {
+		t.Fatal("public masthead does not contain the login action")
+	}
+	for _, link := range []string{`href="/about"`, `href="/upload"`} {
+		if strings.Contains(body, link) {
+			t.Fatalf("public masthead still contains removed navigation %s", link)
+		}
+	}
+}
+
 func TestStripHTMLCollapsesTextForSearch(t *testing.T) {
 	got := stripHTML("<p>rare <strong>search</strong></p>\n<p>token</p>")
 	if got != "rare search token" {
