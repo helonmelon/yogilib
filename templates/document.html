@@ -93,17 +93,17 @@
 
     <aside class="reader-sidebar reader-appearance">
       <section class="reader-tools" aria-label="{{t "Reading tools"}}">
+        <form id="reader-search" role="search">
+          <label>{{t "Find in document"}} <input id="reader-query" type="search" maxlength="200"></label>
+          <div class="reader-search-actions"><button>{{t "Find"}}</button><button type="button" id="search-prev" aria-label="{{t "Previous match"}}">↑</button><button type="button" id="search-next" aria-label="{{t "Next match"}}">↓</button></div>
+          <output id="search-count" aria-live="polite"></output>
+        </form>
         <h2>{{t "Reading tools"}}</h2>
         <details open><summary>{{t "Reading settings · पढ्ने सुविधा"}}</summary>
           <label>{{t "Font size"}} <input id="reader-size" type="range" min="16" max="36" value="20"></label>
           <label>{{t "Line spacing"}} <input id="reader-spacing" type="range" min="1.4" max="2.6" step="0.1" value="1.9"></label>
           <label>{{t "Page width"}} <select id="reader-width"><option value="640px">{{t "Narrow"}}</option><option value="800px">{{t "Comfortable"}}</option><option value="100%" selected>{{t "Wide"}}</option></select></label>
         </details>
-        <form id="reader-search" role="search">
-          <label>{{t "Find in document"}} <input id="reader-query" type="search" maxlength="200"></label>
-          <div class="reader-search-actions"><button>{{t "Find"}}</button><button type="button" id="search-prev" aria-label="{{t "Previous match"}}">↑</button><button type="button" id="search-next" aria-label="{{t "Next match"}}">↓</button></div>
-          <output id="search-count" aria-live="polite"></output>
-        </form>
         {{if .Doc.FilePath}}<button id="reader-split" type="button" aria-pressed="false">{{t "Original + transcription"}}</button>{{end}}
       </section>
     </aside>

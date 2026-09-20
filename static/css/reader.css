@@ -167,6 +167,11 @@
   gap: .35rem;
 }
 
+#reader-search {
+  padding-bottom: .75rem;
+  border-bottom: 1px solid #a2a9b1;
+}
+
 .reader-search-actions {
   display: grid;
   grid-template-columns: 1fr auto auto;
@@ -273,7 +278,8 @@
     background: #f8f9fa;
   }
 
-  .reader-tools h2 { grid-column: 1 / -1; }
+  .reader-tools h2,
+  .reader-tools #reader-search { grid-column: 1 / -1; }
 }
 
 @media (max-width: 760px) {
